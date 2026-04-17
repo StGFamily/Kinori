@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FamilyHub</title>
+<title>Kinori</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -230,6 +230,34 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 .star-pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1);}
 .reward-pop{animation:spinPop .6s cubic-bezier(.34,1.56,.64,1);}
 #cel-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+/* ── ONBOARDING ── */
+.ob-wrap{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+.ob-wrap.hid{display:none;}
+.ob-step{width:100%;max-width:460px;display:flex;flex-direction:column;align-items:center;}
+.ob-step.hid{display:none;}
+.ob-card{background:var(--sf);border-radius:22px;padding:28px 24px 24px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.12);border:1.5px solid var(--bd);}
+.ob-card-wide{max-width:520px;}
+.ob-logo{font-size:48px;text-align:center;margin-bottom:10px;}
+.ob-step-lbl{font-size:11px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;text-align:center;margin-bottom:8px;}
+.ob-h{font-size:22px;font-weight:900;color:var(--tx);text-align:center;margin-bottom:8px;}
+.ob-p{font-size:13px;color:var(--tx2);text-align:center;line-height:1.55;margin-bottom:4px;}
+.ob-next{width:100%;padding:14px;background:var(--am);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:6px;}
+.ob-next:disabled{opacity:.4;cursor:not-allowed;}
+.ob-skip{width:100%;padding:10px;background:transparent;color:var(--tx3);border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;}
+.ob-add-mem{width:100%;padding:11px;background:var(--sf2);color:var(--am);border:2px dashed var(--am);border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;}
+.ob-mem-row{display:flex;align-items:center;gap:10px;background:var(--sf2);border-radius:12px;padding:10px 12px;border:1.5px solid var(--bd);}
+.ob-mem-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.ob-mem-name{flex:1;font-size:13px;font-weight:800;}
+.ob-mem-role{font-size:11px;color:var(--tx3);font-weight:700;}
+.ob-mem-del{font-size:18px;color:var(--tx3);cursor:pointer;padding:2px 4px;line-height:1;}
+.ob-glossary{display:flex;flex-direction:column;gap:10px;margin:14px 0;max-height:52vh;overflow-y:auto;padding-right:4px;}
+.ob-glossary::-webkit-scrollbar{width:3px;}
+.ob-glossary::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
+.ob-gl-row{display:flex;align-items:flex-start;gap:13px;}
+.ob-gl-icon{font-size:24px;flex-shrink:0;margin-top:1px;}
+.ob-gl-title{font-size:13px;font-weight:900;color:var(--tx);margin-bottom:2px;}
+.ob-gl-desc{font-size:12px;color:var(--tx2);line-height:1.5;}
+.ob-start{background:var(--gnd);font-size:16px;padding:16px;margin-top:8px;}
 .save-toast{position:fixed;bottom:20px;right:20px;background:var(--gnd);color:#fff;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:800;z-index:700;opacity:0;transition:opacity .3s;pointer-events:none;}
 .save-toast.show{opacity:1;}
 .bonus-star-btn.picked{background:var(--am)!important;border-color:var(--am)!important;color:#fff!important;}
@@ -248,10 +276,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 
 /* ── LOCK SCREEN ── */
 /* ── LOCK SCREEN ── */
-#lock{position:fixed;inset:0;z-index:900;overflow:hidden;color:#fff;}
+#lock{position:fixed;inset:0;z-index:900;overflow:hidden;color:#fff;background:#1A0800;}
 #lock.gone{display:none;}
 #lk-scene{position:absolute;inset:0;transition:opacity 1.2s ease;}
-#lk-overlay{position:absolute;inset:0;background:rgba(0,0,0,.18);}
+#lk-overlay{position:absolute;inset:0;background:rgba(0,0,0,.15);pointer-events:none;}
 #lk-canvas{position:absolute;inset:0;width:100%;height:100%;}
 .lk-body{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 28px 44px;}
 .lk-top{display:flex;flex-direction:column;align-items:center;gap:6px;}
@@ -327,13 +355,9 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
       <div id="hg" style="font-size:22px;font-weight:900;"></div>
       <div id="hd" style="font-size:11px;color:var(--tx3);margin-top:1px;"></div>
     </div>
-    <div class="hsec">
-      <div class="hsec-t">Next Big Thing 🎉</div>
-      <div class="cdbar" style="background:linear-gradient(135deg,#F59E0B,#D97706);">
-        <div style="font-size:28px;">🌴</div>
-        <div style="flex:1;"><div style="font-size:14px;font-weight:800;">Summer Vacation!</div><div style="font-size:11px;opacity:.8;margin-top:1px;">days until the fun begins!</div></div>
-        <div style="font-size:36px;font-weight:900;line-height:1;">47</div>
-      </div>
+    <div class="hsec" id="nbt-sec">
+      <div class="hsec-t"><span>Looking Forward To</span><button onclick="openNbtModal()" style="background:var(--am);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">+ Add</button></div>
+      <div id="nbt-display"></div>
     </div>
     <div class="hsec">
       <div class="hsec-t"><span>Today's Events 📅</span><button class="hsec-t a" onclick="navTo('cal')">See all →</button></div>
@@ -382,7 +406,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 <div class="pg" id="pg-cal">
   <div class="phdr">
     <h1>Calendar</h1>
-    <button class="hb pri" onclick="openAddEvent(null)">+ Add Event</button>
+    <button class="hb pri" onclick="openAddEvent(null)">+ Add</button>
   </div>
   <div style="padding:9px 18px 0;flex-shrink:0;">
     <div class="tbbar" style="margin-bottom:7px;">
@@ -423,7 +447,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 
 <!-- PRIZES -->
 <div class="pg" id="pg-stars">
-  <div class="phdr"><h1>Stars &amp; Prizes 🏆</h1><button class="hb pri" onclick="openAddPrize()">+ Add Prize</button></div>
+  <div class="phdr"><h1>Stars &amp; Prizes 🏆</h1></div>
   <div class="scr" id="stars-body"></div>
 </div>
 
@@ -436,8 +460,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 <!-- PARENT -->
 <div class="pg" id="pg-parent">
   <div class="phdr">
-    <h1>Settings</h1>
+    <button class="hb" onclick="navTo('home')" style="margin-right:4px;" title="Back to app">← Back</button>
+    <h1 style="flex:1;">Settings</h1>
     <div style="display:flex;gap:5px;">
+      <button class="hb" onclick="lockApp()" title="Lock the app">🔒 Lock</button>
       <button class="hb" onclick="exportData()">💾 Export</button>
       <button class="hb" onclick="importData()">📂 Import</button>
     </div>
@@ -457,10 +483,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
     <div style="font-size:13px;font-weight:900;margin:16px 0 8px;">Prizes</div>
     <div id="prize-list-p"></div>
     <button class="add-row" onclick="openAddPrize()">＋ Add prize</button>
-    <div style="margin-top:20px;padding:13px;background:var(--aml);border-radius:12px;border:1.5px solid var(--am);">
-      <div style="font-size:12px;font-weight:900;color:var(--amd);margin-bottom:5px;">💾 About Data Storage</div>
-      <div style="font-size:11px;color:var(--tx2);line-height:1.5;">Data saves automatically to this device's browser storage. Use Export to back it up or copy to another device via Import.</div>
-    </div>
+
     <div style="margin-top:14px;padding:13px;background:var(--bll);border-radius:12px;border:1.5px solid var(--bl);">
       <div style="font-size:12px;font-weight:900;color:var(--bld);margin-bottom:10px;">📅 Calendar Week View Hours</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
@@ -474,6 +497,19 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
         </div>
       </div>
       <div style="font-size:11px;color:var(--bld);opacity:.7;">Currently showing <span id="cal-hours-label"></span></div>
+    </div>
+    <div style="margin-top:14px;padding:13px;background:var(--gnl);border-radius:12px;border:1.5px solid var(--gn);">
+      <div style="font-size:12px;font-weight:900;color:var(--gnd);margin-bottom:8px;">⭐ Points Reset &amp; Monthly Tally</div>
+      <div class="ff" style="margin-bottom:8px;">
+        <label style="color:var(--gnd);">Auto-reset points</label>
+        <select id="reset-freq" style="width:100%;padding:8px 11px;border:1.5px solid var(--gn);border-radius:9px;font-size:13px;font-family:inherit;background:var(--sf);color:var(--tx);" onchange="saveResetSettings()">
+          <option value="never">Never — keep all points</option>
+          <option value="weekly">Weekly — reset every Sunday night</option>
+          <option value="monthly">Monthly — reset on the 1st</option>
+        </select>
+      </div>
+      <div style="font-size:11px;color:var(--gnd);line-height:1.5;opacity:.8;">Points are saved to a monthly tally before resetting so kids can see how they did each month.</div>
+      <div style="margin-top:6px;font-size:11px;color:var(--gnd);font-weight:700;" id="next-reset-lbl"></div>
     </div>
     <div style="margin-top:14px;padding:13px;background:var(--rdl);border-radius:12px;border:1.5px solid #FECACA;">
       <div style="font-size:12px;font-weight:900;color:var(--rdd);margin-bottom:8px;">🔐 Change App Password</div>
@@ -512,11 +548,106 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
       <button onclick="regenerateRecovery()" style="width:100%;padding:8px;border-radius:9px;background:#C2410C;color:#fff;border:none;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">Generate New Recovery Code</button>
       <div style="font-size:10px;color:#9A3412;margin-top:5px;opacity:.7;">Generating a new code invalidates the old one.</div>
     </div>
+    <div style="margin-top:14px;padding:13px;background:#FFF1F2;border-radius:12px;border:1.5px solid #FECDD3;">
+      <div style="font-size:12px;font-weight:900;color:#BE123C;margin-bottom:6px;">🗑️ Reset App Data</div>
+      <div style="font-size:11px;color:#881337;line-height:1.6;margin-bottom:10px;">Wipes all family members, chores, routines, events, meals, notes and shopping items. The app will return to a clean state. This cannot be undone — export your data first if you want a backup.</div>
+      <button onclick="resetAllData()" style="width:100%;padding:10px;border-radius:9px;background:#BE123C;color:#fff;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">Reset All Data</button>
+    </div>
   </div>
 </div>
 
 </div><!-- .main -->
 </div><!-- .app -->
+
+<!-- ONBOARDING -->
+<div id="ob" class="ob-wrap hid">
+  <!-- Step 1: Family Name -->
+  <div class="ob-step" id="ob-1">
+    <div class="ob-card">
+      <div class="ob-logo">🎉</div>
+      <div class="ob-step-lbl">Step 1 of 5</div>
+      <h2 class="ob-h">Welcome to Kinori!</h2>
+      <p class="ob-p">Let's get your family set up. What should we call your family?</p>
+      <div class="ff" style="margin:20px 0 8px;">
+        <label>Family name</label>
+        <input id="ob-fname" placeholder="e.g. Smiths" style="font-size:16px;">
+      </div>
+      <button class="ob-next" onclick="obNext(1)">Continue →</button>
+    </div>
+  </div>
+  <!-- Step 2: Family Members -->
+  <div class="ob-step hid" id="ob-2">
+    <div class="ob-card">
+      <div class="ob-logo">👨‍👩‍👧‍👦</div>
+      <div class="ob-step-lbl">Step 2 of 5</div>
+      <h2 class="ob-h">Add your family</h2>
+      <p class="ob-p">Add at least one family member to get started. You can add more later.</p>
+      <div id="ob-member-list" style="margin:14px 0;display:flex;flex-direction:column;gap:8px;"></div>
+      <button class="ob-add-mem" onclick="obAddMember()">+ Add family member</button>
+      <button class="ob-next" id="ob-2-next" onclick="obNext(2)" style="margin-top:14px;" disabled>Continue →</button>
+    </div>
+  </div>
+  <!-- Step 3: App Password -->
+  <div class="ob-step hid" id="ob-3">
+    <div class="ob-card">
+      <div class="ob-logo">🔐</div>
+      <div class="ob-step-lbl">Step 3 of 5</div>
+      <h2 class="ob-h">Set your app password</h2>
+      <p class="ob-p">This locks the app so only your family can open it. Everyone shares one password.</p>
+      <div class="ff" style="margin:20px 0 8px;">
+        <label>Password</label>
+        <input id="ob-pw1" type="password" placeholder="Choose a password">
+      </div>
+      <div class="ff" style="margin-bottom:8px;">
+        <label>Confirm password</label>
+        <input id="ob-pw2" type="password" placeholder="Repeat it">
+      </div>
+      <div id="ob-pw-err" style="font-size:12px;color:var(--rdd);min-height:16px;margin-bottom:8px;"></div>
+      <button class="ob-next" onclick="obNext(3)">Continue →</button>
+      <button class="ob-skip" onclick="obSkip(3)">Skip — use default password</button>
+    </div>
+  </div>
+  <!-- Step 4: Settings PIN -->
+  <div class="ob-step hid" id="ob-4">
+    <div class="ob-card">
+      <div class="ob-logo">🔢</div>
+      <div class="ob-step-lbl">Step 4 of 5</div>
+      <h2 class="ob-h">Set a parent PIN</h2>
+      <p class="ob-p">A 4-digit PIN protects Settings so kids can't change things. Default is 1234.</p>
+      <div class="ff" style="margin:20px 0 8px;">
+        <label>4-digit PIN</label>
+        <input id="ob-pin1" type="password" inputmode="numeric" maxlength="4" placeholder="e.g. 4821" style="letter-spacing:4px;">
+      </div>
+      <div class="ff" style="margin-bottom:8px;">
+        <label>Confirm PIN</label>
+        <input id="ob-pin2" type="password" inputmode="numeric" maxlength="4" placeholder="Repeat it" style="letter-spacing:4px;">
+      </div>
+      <div id="ob-pin-err" style="font-size:12px;color:var(--rdd);min-height:16px;margin-bottom:8px;"></div>
+      <button class="ob-next" onclick="obNext(4)">Continue →</button>
+      <button class="ob-skip" onclick="obSkip(4)">Skip — use default PIN (1234)</button>
+    </div>
+  </div>
+  <!-- Step 5: Glossary -->
+  <div class="ob-step hid" id="ob-5">
+    <div class="ob-card ob-card-wide">
+      <div class="ob-step-lbl">Step 5 of 5</div>
+      <h2 class="ob-h">Feature highlights</h2>
+      <div class="ob-glossary">
+        <div class="ob-gl-row"><div class="ob-gl-icon">🏡</div><div><div class="ob-gl-title">Home</div><div class="ob-gl-desc">Your daily dashboard. Today's events, the star leaderboard, countdowns, and bonus stars for unexpected moments worth celebrating.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">📅</div><div><div class="ob-gl-title">Calendar</div><div class="ob-gl-desc">Manage your family's schedules. Day, week and month views so you can plan ahead or check what's on today.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">🌅</div><div><div class="ob-gl-title">Rhythms</div><div class="ob-gl-desc">Daily routines for each family member — morning, afternoon and evening. Check them off as they are completed.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">✅</div><div><div class="ob-gl-title">My Part</div><div class="ob-gl-desc">Each person's contributions to the family. Kids and parents earn stars for completing tasks — everyone's effort counts.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">🏆</div><div><div class="ob-gl-title">Prizes</div><div class="ob-gl-desc">Rewards for each family member's completed tasks. Choose and redeem rewards once enough stars have been earned.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">🍽️</div><div><div class="ob-gl-title">Meals</div><div class="ob-gl-desc">Weekly meal planner. Add a recipe link or nanny notes using the notes field on each meal.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">🛒</div><div><div class="ob-gl-title">Shopping</div><div class="ob-gl-desc">Shared list organised by store. Add items, check them off as you shop.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">📝</div><div><div class="ob-gl-title">Notes</div><div class="ob-gl-desc">Messages for family, nanny, or anyone who needs to know what's happening. Pin the important ones. Delete when done.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">🎉</div><div><div class="ob-gl-title">Looking Forward To</div><div class="ob-gl-desc">Countdowns to things your family is excited about.</div></div></div>
+        <div class="ob-gl-row"><div class="ob-gl-icon">⚙️</div><div><div class="ob-gl-title">Settings</div><div class="ob-gl-desc">PIN-protected. Manage family members, set prizes, update passwords — everything that keeps the app running your way.</div></div></div>
+      </div>
+      <button class="ob-next ob-start" onclick="obFinish()">Get started →</button>
+    </div>
+  </div>
+</div>
 
 <div class="save-toast" id="save-toast">✓ Saved</div>
 
@@ -534,6 +665,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 
 <!-- PIN -->
 <div class="pin-ov hid" id="pin-ov">
+  <button onclick="cm('pin-ov')" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;">✕</button>
   <div style="font-size:22px;font-weight:900;">🔐 Parent Settings</div>
   <div style="font-size:12px;opacity:.6;margin-top:3px;">Enter your 4-digit PIN</div>
   <div class="pdots"><div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div><div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div></div>
@@ -541,7 +673,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
     <button class="pkey" onclick="pk('1')">1</button><button class="pkey" onclick="pk('2')">2</button><button class="pkey" onclick="pk('3')">3</button>
     <button class="pkey" onclick="pk('4')">4</button><button class="pkey" onclick="pk('5')">5</button><button class="pkey" onclick="pk('6')">6</button>
     <button class="pkey" onclick="pk('7')">7</button><button class="pkey" onclick="pk('8')">8</button><button class="pkey" onclick="pk('9')">9</button>
-    <button class="pkey" style="font-size:13px;" onclick="cm('pin-ov')">✕</button>
+    <button class="pkey" style="visibility:hidden;"></button>
     <button class="pkey" onclick="pk('0')">0</button>
     <button class="pkey" style="font-size:15px;" onclick="pk('⌫')">⌫</button>
   </div>
@@ -564,7 +696,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 
 <!-- ADD/EDIT EVENT -->
 <div class="ov hid" id="m-event"><div class="modal">
-  <div class="mhnd"></div><h2 id="ev-modal-title">Add Event</h2>
+  <div class="mhnd"></div><h2 id="ev-modal-title">Add</h2>
   <div class="ff"><label>Event name</label><input id="ei-name" placeholder="e.g. Soccer practice"></div>
   <div class="ff"><label>Date</label><input id="ei-date" type="date"></div>
   <div class="ff"><label>Start time</label><input id="ei-time" type="time"></div>
@@ -581,45 +713,86 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <div class="ff"><label>Meal name</label><input id="mi-name" placeholder="e.g. Spaghetti Bolognese"></div>
   <div class="ff"><label>Day</label><select id="mi-day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
   <div class="ff"><label>Meal type</label><select id="mi-type"><option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option></select></div>
+  <div class="ff"><label>Notes / Recipe link <span style="font-weight:400;color:var(--tx3);">(optional)</span></label><textarea id="mi-notes" placeholder="e.g. https://... or &quot;add extra garlic&quot;" rows="2" style="resize:vertical;min-height:52px;"></textarea></div>
   <div class="mbts"><button class="mbt can" onclick="cm('m-meal')">Cancel</button><button class="mbt cfm" onclick="saveMeal()">Save</button></div>
   <button class="mbt del" id="mi-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteMeal()">Remove Meal</button>
 </div></div>
 
 <!-- ADD GROCERY -->
 <div class="ov hid" id="m-grocery"><div class="modal">
-  <div class="mhnd"></div><h2>Add Shopping Item</h2>
+  <div class="mhnd"></div><h2 id="grocery-modal-title">Add Shopping Item</h2>
   <div class="ff"><label>Item name</label><input id="gi-name" placeholder="e.g. Chicken breasts"></div>
   <div class="ff"><label>Quantity</label><input id="gi-qty" placeholder="e.g. 1 lb, 4 pcs"></div>
   <div class="ff"><label>Category</label><select id="gi-cat"><option>Produce</option><option>Meat &amp; Protein</option><option>Dairy</option><option>Pantry</option><option>Frozen</option><option>Bakery</option><option>Household</option><option>Other</option></select></div>
   <div class="ff"><label>Store</label><select id="gi-store"></select></div>
   <div class="mbts"><button class="mbt can" onclick="cm('m-grocery')">Cancel</button><button class="mbt cfm" onclick="saveGrocery()">Save</button></div>
+  <button class="mbt del" id="gi-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteGrocery()">Delete Item</button>
 </div></div>
 
-<!-- ADD PRIZE -->
+<!-- NEXT BIG THING -->
+<div class="ov hid" id="m-nbt"><div class="modal">
+  <div class="mhnd"></div><h2 id="nbt-modal-title">Add Upcoming Event</h2>
+  <div class="ff"><label>Event name</label><input id="nbt-name" placeholder="e.g. Summer Vacation!"></div>
+  <div class="ff">
+    <label>Icon</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div id="nbt-ico-prev" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid var(--bd);background:var(--sf2);">\U0001f389</div>
+      <div style="font-size:11px;color:var(--tx3);">Tap an icon below or type your own</div>
+    </div>
+    <input id="nbt-icon" placeholder="or type emoji here" maxlength="4" style="margin-bottom:6px;" oninput="var p=$('nbt-ico-prev');if(this.value)p.textContent=this.value;">
+    <div class="ico-wrap" id="nbt-ico-lib"></div>
+  </div>
+  <div class="ff"><label>Date</label><input id="nbt-date" type="date"></div>
+  <div class="mbts"><button class="mbt can" onclick="cm('m-nbt')">Cancel</button><button class="mbt cfm" onclick="saveNbt()">Save</button></div>
+  <button class="mbt del" id="nbt-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteNbt()">Remove</button>
+</div></div>
+
+<!-- ADD / EDIT PRIZE -->
 <div class="ov hid" id="m-prize"><div class="modal">
-  <div class="mhnd"></div><h2>Add Prize</h2>
+  <div class="mhnd"></div><h2 id="prize-modal-title">Add Prize</h2>
+  <div id="pi-form-fields">
   <div class="ff"><label>Prize name</label><input id="pi-name" placeholder="e.g. Movie Night Pick"></div>
-  <div class="ff"><label>Icon (paste emoji)</label><input id="pi-icon" placeholder="🎬" maxlength="4"></div>
+  <div class="ff">
+    <label>Icon</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div id="pi-prev" style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid var(--bd);background:var(--sf2);">\uD83C\uDFC6</div>
+      <div style="font-size:11px;color:var(--tx3);">Tap to pick or type your own</div>
+    </div>
+    <input id="pi-icon" placeholder="or type emoji here" maxlength="4" style="margin-bottom:6px;" oninput="var p=$('pi-prev');if(this.value){p.textContent=this.value;selPrizeIcon=this.value;}">
+    <div class="ico-wrap" id="prize-ico-lib"></div>
+  </div>
   <div class="ff"><label>Stars required</label><input id="pi-stars" type="number" value="10" min="1"></div>
   <div class="ff"><label>For</label><select id="pi-mem"></select></div>
   <div class="mbts"><button class="mbt can" onclick="cm('m-prize')">Cancel</button><button class="mbt cfm" onclick="savePrize()">Save</button></div>
+  <button class="mbt del" id="pi-del" style="width:100%;margin-top:7px;display:none;" onclick="deletePrize()">Delete Prize</button>
+  </div>
+  <!-- Redeem-only view (shown from Stars page) -->
+  <div id="pi-redeem-view" style="display:none;">
+    <div id="pi-redeem-info" style="text-align:center;padding:10px 0 16px;"></div>
+    <button class="mbt can" style="width:100%;margin-bottom:8px;" onclick="cm('m-prize')">Cancel</button>
+  </div>
+  <button class="mbt cfm" id="pi-redeem" style="width:100%;margin-top:7px;display:none;background:var(--gn);" onclick="redeemPrize()">Redeem Prize!</button>
 </div></div>
 
-<!-- ADD CHORE -->
+<!-- ADD / EDIT CHORE -->
 <div class="ov hid" id="m-chore"><div class="modal">
-  <div class="mhnd"></div><h2>Add Contribution</h2>
+  <div class="mhnd"></div><h2 id="chore-modal-title">Add Contribution</h2>
   <div class="ff"><label>Contribution name</label><input id="ci-name" placeholder="e.g. Feed the dog"></div>
   <div class="ff"><label>Assign to</label><select id="ci-mem"></select></div>
   <div class="ff"><label>Stars</label><select id="ci-stars"><option value="1">1 ⭐</option><option value="2" selected>2 ⭐</option><option value="3">3 ⭐</option><option value="4">4 ⭐</option><option value="5">5 ⭐</option></select></div>
   <div class="ff"><label>Frequency</label><select id="ci-freq"><option>Daily</option><option>Weekly</option><option>One-off</option></select></div>
   <div class="mbts"><button class="mbt can" onclick="cm('m-chore')">Cancel</button><button class="mbt cfm" onclick="saveChore()">Save</button></div>
+  <button class="mbt del" id="ci-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteChore()">Delete Contribution</button>
 </div></div>
 
 <!-- ADD ROUTINE ITEM -->
 <div class="ov hid" id="m-routine"><div class="modal">
   <div class="mhnd"></div><h2 id="routine-modal-title">Add Rhythm Item</h2>
   <div class="ff"><label>Name</label><input id="ri-name" placeholder="e.g. Brush teeth, Read a book"></div>
-  <div class="ff"><label>For</label><select id="ri-mem"></select></div>
+  <div class="ff">
+    <label>Assign to</label>
+    <div id="ri-mem-picks" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;"></div>
+  </div>
   <div class="ff"><label>Time of day</label>
     <div style="display:flex;gap:8px;">
       <button class="routine-tod-btn" onclick="setRiTod('Morning',this)"   style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--bd);background:var(--aml);color:var(--amd);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;">🌤 Morning</button>
@@ -628,14 +801,27 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
     </div>
     <input type="hidden" id="ri-tod" value="Morning">
   </div>
+  <div class="ff">
+    <label>Days of week</label>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;" id="ri-days-picks">
+      <button class="ri-day-btn on" data-day="Mon" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Mon</button>
+      <button class="ri-day-btn on" data-day="Tue" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Tue</button>
+      <button class="ri-day-btn on" data-day="Wed" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Wed</button>
+      <button class="ri-day-btn on" data-day="Thu" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Thu</button>
+      <button class="ri-day-btn on" data-day="Fri" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Fri</button>
+      <button class="ri-day-btn"    data-day="Sat" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--bd);background:var(--sf2);color:var(--tx2);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Sat</button>
+      <button class="ri-day-btn"    data-day="Sun" onclick="toggleRiDay(this)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--bd);background:var(--sf2);color:var(--tx2);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">Sun</button>
+    </div>
+  </div>
   <div class="ff"><label>Type</label>
     <div style="display:flex;gap:8px;">
-      <button class="routine-type-btn" onclick="setRiType('task',this)"    style="flex:1;padding:9px;border-radius:10px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">📋 Daily task</button>
+      <button class="routine-type-btn" onclick="setRiType('task',this)"     style="flex:1;padding:9px;border-radius:10px;border:2px solid var(--am);background:var(--aml);color:var(--amd);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">📋 Daily task</button>
       <button class="routine-type-btn" onclick="setRiType('together',this)" style="flex:1;padding:9px;border-radius:10px;border:2px solid var(--bd);background:var(--sf2);color:var(--tx2);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;">💛 Together time</button>
     </div>
     <input type="hidden" id="ri-type" value="task">
   </div>
   <div class="mbts"><button class="mbt can" onclick="cm('m-routine')">Cancel</button><button class="mbt cfm" onclick="saveRoutine()">Save</button></div>
+  <button class="mbt del" id="ri-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteRoutine()">Delete Rhythm Item</button>
 </div></div>
 
 <!-- BONUS STARS -->
@@ -658,7 +844,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 <!-- ADD/EDIT NOTE -->
 <div class="ov hid" id="m-note"><div class="modal">
   <div class="mhnd"></div><h2 id="note-modal-title">New Note</h2>
-  <div class="ff"><label>From</label><select id="note-from"></select></div>
+  <div class="ff"><label>To</label><select id="note-from"></select></div>
   <div class="ff"><label>Title</label><input id="note-title-inp" placeholder="e.g. Nanny instructions for Tuesday"></div>
   <div class="ff"><label>Message</label><textarea id="note-body-inp" placeholder="Write your note here..."></textarea></div>
   <div class="ff"><label>Checklist items (one per line)</label><textarea id="note-cl-inp" placeholder="Pick up Emma from soccer&#10;Give Leo his vitamin&#10;Start dinner by 5pm"></textarea></div>
@@ -674,7 +860,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 <div class="ov hid ctr" id="m-member"><div class="modal">
   <h2 id="mm-title">Add Family Member</h2>
   <div class="ff"><label>Name</label><input id="mm-name" placeholder="e.g. Emma"></div>
-  <div class="ff"><label>Role</label><select id="mm-role"><option value="kid">Kid</option><option value="parent">Parent / Adult</option></select></div>
+  <div class="ff"><label>Role</label><select id="mm-role"><option value="kid">Kid</option><option value="parent">Parent / Adult</option><option value="caregiver">Caregiver</option></select></div>
   <div class="ff">
     <label>Choose an icon</label>
     <div class="ico-prev-row">
@@ -726,9 +912,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  CONSTANTS
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 const PIN_KEY = 'kinori_pin';
 const PIN_RECOVERY_KEY = 'kinori_pin_recovery';
 const DEFAULT_PIN = '1234';
@@ -740,20 +927,22 @@ function getRecoveryCode(){
   return c;
 }
 function genRecoveryCode(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return 'KINORI-'+Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('')+
-    '-'+Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var a='',b='';
+  for(var i=0;i<4;i++){a+=chars[Math.floor(Math.random()*chars.length)];}
+  for(var j=0;j<4;j++){b+=chars[Math.floor(Math.random()*chars.length)];}
+  return 'KINORI-'+a+'-'+b;
 }
-// Stores — editable at runtime; loaded from localStorage
+// Stores \u2014 editable at runtime; loaded from localStorage
 const DEFAULT_STORES = [
-  {id:'s-publix',  name:'Publix',   icon:'🍃', color:'#16A34A'},
-  {id:'s-kroger',  name:'Kroger',   icon:'🔵', color:'#1D4ED8'},
-  {id:'s-target',  name:'Target',   icon:'🎯', color:'#DC2626'},
-  {id:'s-walmart', name:'Walmart',  icon:'🌟', color:'#2563EB'},
-  {id:'s-costco',  name:'Costco',   icon:'🏢', color:'#7C3AED'},
-  {id:'s-amazon',  name:'Amazon',   icon:'📦', color:'#EA580C'},
-  {id:'s-online',  name:'Online',   icon:'💻', color:'#0891B2'},
-  {id:'s-any',     name:'Any store',icon:'🛒', color:'#6B7280'},
+  {id:'s-publix',  name:'Publix',   icon:'\uD83C\uDF43', color:'#16A34A'},
+  {id:'s-kroger',  name:'Kroger',   icon:'\uD83D\uDD35', color:'#1D4ED8'},
+  {id:'s-target',  name:'Target',   icon:'\uD83C\uDFAF', color:'#DC2626'},
+  {id:'s-walmart', name:'Walmart',  icon:'\uD83C\uDF1F', color:'#2563EB'},
+  {id:'s-costco',  name:'Costco',   icon:'\uD83C\uDFE2', color:'#7C3AED'},
+  {id:'s-amazon',  name:'Amazon',   icon:'\uD83D\uDCE6', color:'#EA580C'},
+  {id:'s-online',  name:'Online',   icon:'\uD83D\uDCBB', color:'#0891B2'},
+  {id:'s-any',     name:'Any store',icon:'\uD83D\uDED2', color:'#6B7280'},
 ];
 function loadStores(){
   try{const s=localStorage.getItem('fh_stores');if(s)return JSON.parse(s);}catch(e){}
@@ -765,17 +954,17 @@ function saveStores(){
 let customStores = loadStores();
 // Helpers that replace the old constants
 function getStoreColor(name){return (customStores.find(s=>s.name===name)||{color:'#6B7280'}).color;}
-function getStoreIcon(name){return (customStores.find(s=>s.name===name)||{icon:'🏪'}).icon;}
+function getStoreIcon(name){return (customStores.find(s=>s.name===name)||{icon:'\u{1F3EA}'}).icon;}
 function getStoreNames(){return customStores.map(s=>s.name);}
 const COLORS = ['#F59E0B','#8B5CF6','#0D9488','#F97316','#EC4899','#3B82F6','#22C55E','#EF4444','#6366F1','#14B8A6','#D97706','#DB2777','#7C3AED','#DC2626','#059669','#0EA5E9','#84CC16','#F43F5E'];
 const ICONS = {
-  '👩 Women':        ['👩','👩‍🦱','👩‍🦰','👩‍🦳','👩‍🦲','🧑‍🦱','👱‍♀️','🧕','👩‍🍳','👩‍🏫','👩‍💼','👩‍🔬','👩‍🎨','👩‍🚀','👩‍⚕️','👩‍🌾','🧙‍♀️','🧚‍♀️','🦸‍♀️','🦹‍♀️','🧜‍♀️','🧝‍♀️','🤱','👩‍👧','👩‍👦'],
-  '👨 Men & Boys':   ['👦','🧒','👧','👶','👱','👨','👴','🧓','👨‍🍳','👨‍🏫','👨‍💼','👨‍🔬','👨‍🎨','👨‍🚀','🧔','👲','🧑','🧑‍🎤','🧑‍💻','🦸','🦹','🧙','🧞','🧑‍🚒'],
-  '🦄 Animals':      ['🦄','🦕','🐶','🐱','🐻','🐼','🦊','🐯','🦁','🐸','🐨','🐰','🦋','🐙','🦈','🐠','🦜','🐢','🦔','🐝','🦩','🐳','🦭','🦒','🦓','🐘','🦏','🐬','🦅','🦉','🦚','🦀','🦇','🐇','🐿️','🦫'],
-  '⚽ Sports':       ['⚽','🏀','🎾','🏈','🏐','🎱','🏓','🏸','🥊','🏋️','🤸','🏊','🚴','🛹','⛷️','🏄','🧗','🎯','🎳','🤺','🏹','🤿','🧘'],
-  '🎨 Hobbies':      ['🎨','🎮','🎬','🎤','🎸','🎺','🎻','🥁','🎹','🎭','📚','✏️','🔭','🔬','🧩','🎲','🧸','🎵','🎶','🎠','🎡','🖼️'],
-  '🌟 Nature':       ['🌟','⭐','🌈','☀️','🌙','🌺','🌻','🌊','🏔️','🚀','🌍','🌸','🍀','🌴','🌠','🌵','🍄','🌿','🌱','❄️','🔥','💧','🌋','🏝️'],
-  '🍕 Food & Fun':   ['🍕','🍦','🍓','🎂','🍩','🌮','🍜','🍔','🍗','🥞','🍰','🍪','🧁','🍫','🍎','🍇','🥑','🌽','🧀','🎉','🎁','🎀','🏆','💎'],
+  '\uD83D\uDC69 Women':        ['\uD83D\uDC69','\uD83D\uDC69\u200D\uD83E\uDDB1','\uD83D\uDC69\u200D\uD83E\uDDB0','\uD83D\uDC69\u200D\uD83E\uDDB3','\uD83D\uDC69\u200D\uD83E\uDDB2','\uD83E\uDDD1\u200D\uD83E\uDDB1','\uD83D\uDC71\u200D\u2640\uFE0F','\uD83E\uDDD5','\uD83D\uDC69\u200D\uD83C\uDF73','\uD83D\uDC69\u200D\uD83C\uDFEB','\uD83D\uDC69\u200D\uD83D\uDCBC','\uD83D\uDC69\u200D\uD83D\uDD2C','\uD83D\uDC69\u200D\uD83C\uDFA8','\uD83D\uDC69\u200D\uD83D\uDE80','\uD83D\uDC69\u200D\u2695\uFE0F','\uD83D\uDC69\u200D\uD83C\uDF3E','\uD83E\uDDD9\u200D\u2640\uFE0F','\uD83E\uDDDA\u200D\u2640\uFE0F','\uD83E\uDDB8\u200D\u2640\uFE0F','\uD83E\uDDB9\u200D\u2640\uFE0F','\uD83E\uDDDC\u200D\u2640\uFE0F','\uD83E\uDDDD\u200D\u2640\uFE0F','\uD83E\uDD31','\uD83D\uDC69\u200D\uD83D\uDC67','\uD83D\uDC69\u200D\uD83D\uDC66','\uD83D\uDC69\uD83C\uDFFC','\uD83D\uDC69\uD83C\uDFFD','\uD83D\uDC69\uD83C\uDFFE','\uD83D\uDC69\uD83C\uDFFF','\uD83D\uDC83'],
+  '\uD83D\uDC68 Men & Boys':   ['\uD83D\uDC66','\uD83E\uDDD2','\uD83D\uDC67','\uD83D\uDC76','\uD83D\uDC71','\uD83D\uDC68','\uD83D\uDC74','\uD83E\uDDD3','\uD83D\uDC68\u200D\uD83C\uDF73','\uD83D\uDC68\u200D\uD83C\uDFEB','\uD83D\uDC68\u200D\uD83D\uDCBC','\uD83D\uDC68\u200D\uD83D\uDD2C','\uD83D\uDC68\u200D\uD83C\uDFA8','\uD83D\uDC68\u200D\uD83D\uDE80','\uD83E\uDDD4','\uD83D\uDC72','\uD83E\uDDD1','\uD83E\uDDD1\u200D\uD83C\uDFA4','\uD83E\uDDD1\u200D\uD83D\uDCBB','\uD83E\uDDB8','\uD83E\uDDB9','\uD83E\uDDD9','\uD83E\uDDDE','\uD83E\uDDD1\u200D\uD83D\uDE92','\uD83D\uDC68\uD83C\uDFFC','\uD83D\uDC68\uD83C\uDFFD','\uD83D\uDC68\uD83C\uDFFE','\uD83D\uDC68\uD83C\uDFFF','\uD83D\uDC67\uD83C\uDFFD','\uD83D\uDC67\uD83C\uDFFF','\uD83D\uDC66\uD83C\uDFFD','\uD83D\uDC66\uD83C\uDFFF','\uD83D\uDD7A'],
+  '\uD83E\uDD84 Animals':      ['\uD83E\uDD84','\uD83E\uDD95','\uD83D\uDC36','\uD83D\uDC31','\uD83D\uDC3B','\uD83D\uDC3C','\uD83E\uDD8A','\uD83D\uDC2F','\uD83E\uDD81','\uD83D\uDC38','\uD83D\uDC28','\uD83D\uDC30','\uD83E\uDD8B','\uD83D\uDC19','\uD83E\uDD88','\uD83D\uDC20','\uD83E\uDD9C','\uD83D\uDC22','\uD83E\uDD94','\uD83D\uDC1D','\uD83E\uDDA9','\uD83D\uDC33','\uD83E\uDDAD','\uD83E\uDD92','\uD83E\uDD93','\uD83D\uDC18','\uD83E\uDD8F','\uD83D\uDC2C','\uD83E\uDD85','\uD83E\uDD89','\uD83E\uDD9A','\uD83E\uDD80','\uD83E\uDD87','\uD83D\uDC07','\uD83D\uDC3F\uFE0F','\uD83E\uDDAB'],
+  '\u26BD Sports':       ['\u26BD','\uD83C\uDFC0','\uD83C\uDFBE','\uD83C\uDFC8','\uD83C\uDFD0','\uD83C\uDFB1','\uD83C\uDFD3','\uD83C\uDFF8','\uD83E\uDD4A','\uD83C\uDFCB\uFE0F','\uD83E\uDD38','\uD83C\uDFCA','\uD83D\uDEB4','\uD83D\uDEF9','\u26F7\uFE0F','\uD83C\uDFC4','\uD83E\uDDD7','\uD83C\uDFAF','\uD83C\uDFB3','\uD83E\uDD3A','\uD83C\uDFF9','\uD83E\uDD3F','\uD83E\uDDD8'],
+  '\uD83C\uDFA8 Hobbies':      ['\uD83C\uDFA8','\uD83C\uDFAE','\uD83C\uDFAC','\uD83C\uDFA4','\uD83C\uDFB8','\uD83C\uDFBA','\uD83C\uDFBB','\uD83E\uDD41','\uD83C\uDFB9','\uD83C\uDFAD','\uD83D\uDCDA','\u270F\uFE0F','\uD83D\uDD2D','\uD83D\uDD2C','\uD83E\uDDE9','\uD83C\uDFB2','\uD83E\uDDF8','\uD83C\uDFB5','\uD83C\uDFB6','\uD83C\uDFA0','\uD83C\uDFA1','\uD83D\uDDBC\uFE0F'],
+  '\uD83C\uDF1F Nature':       ['\uD83C\uDF1F','\u2B50','\uD83C\uDF08','\u2600\uFE0F','\uD83C\uDF19','\uD83C\uDF3A','\uD83C\uDF3B','\uD83C\uDF0A','\uD83C\uDFD4\uFE0F','\uD83D\uDE80','\uD83C\uDF0D','\uD83C\uDF38','\uD83C\uDF40','\uD83C\uDF34','\uD83C\uDF20','\uD83C\uDF35','\uD83C\uDF44','\uD83C\uDF3F','\uD83C\uDF31','\u2744\uFE0F','\uD83D\uDD25','\uD83D\uDCA7','\uD83C\uDF0B','\uD83C\uDFDD\uFE0F'],
+  '\uD83C\uDF55 Food & Fun':   ['\uD83C\uDF55','\uD83C\uDF66','\uD83C\uDF53','\uD83C\uDF82','\uD83C\uDF69','\uD83C\uDF2E','\uD83C\uDF5C','\uD83C\uDF54','\uD83C\uDF57','\uD83E\uDD5E','\uD83C\uDF70','\uD83C\uDF6A','\uD83E\uDDC1','\uD83C\uDF6B','\uD83C\uDF4E','\uD83C\uDF47','\uD83E\uDD51','\uD83C\uDF3D','\uD83E\uDDC0','\uD83C\uDF89','\uD83C\uDF81','\uD83C\uDF80','\uD83C\uDFC6','\uD83D\uDC8E'],
 };
 const MEAL_COLORS = {Breakfast:'#FEE2E2',Lunch:'#D1FAE5',Dinner:'#FEF3C7',Snack:'#F3E8D0'};
 const MEAL_TEXT   = {Breakfast:'#991B1B',Lunch:'#065F46',Dinner:'#92400E',Snack:'#78350F'};
@@ -785,91 +974,23 @@ const DNAMES_S    = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DNAMES_L    = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const DONE_HOURS  = 24;
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  DEFAULT DATA
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 const DEFAULT = {
-  members:[
-    {id:'emma', name:'Emma',  icon:'🦄', color:'#8B5CF6', role:'kid',    stars:14, goalPrize:'p1'},
-    {id:'leo',  name:'Leo',   icon:'🦕', color:'#0D9488', role:'kid',    stars:8,  goalPrize:'p3'},
-    {id:'mom1', name:'Mama',  icon:'👩', color:'#EC4899', role:'parent', stars:5,  goalPrize:'p5'},
-    {id:'mom2', name:'Mommy', icon:'👩‍🦱',color:'#3B82F6', role:'parent', stars:3,  goalPrize:'p6'},
-  ],
-  chores:[
-    {id:'c1', name:'Feed the dog',          member:'emma', stars:3, freq:'Daily',  done:false},
-    {id:'c2', name:'Set the table',          member:'emma', stars:2, freq:'Daily',  done:false},
-    {id:'c3', name:'Pick up toys',           member:'emma', stars:1, freq:'Daily',  done:true},
-    {id:'c4', name:'Clean your room',        member:'emma', stars:5, freq:'Weekly', done:false},
-    {id:'c5', name:'Put toys in bin',        member:'leo',  stars:2, freq:'Daily',  done:false},
-    {id:'c6', name:'Put clothes in hamper',  member:'leo',  stars:1, freq:'Daily',  done:false},
-    {id:'c7', name:'Vacuum living room',     member:'mom1', stars:3, freq:'Weekly', done:false},
-    {id:'c8', name:'Grocery run',            member:'mom2', stars:3, freq:'Weekly', done:false},
-  ],
-  routines:[
-    {id:'r1', name:'Get dressed',     member:'emma', tod:'Morning',   type:'task',     done:false},
-    {id:'r2', name:'Brush teeth',     member:'emma', tod:'Morning',   type:'task',     done:false},
-    {id:'r3', name:'Make your bed',   member:'emma', tod:'Morning',   type:'task',     done:false},
-    {id:'r4', name:'Read together',   member:'emma', tod:'Afternoon', type:'together', done:false},
-    {id:'r5', name:'Tidy up',         member:'emma', tod:'Evening',   type:'task',     done:true},
-    {id:'r6', name:'Brush teeth',     member:'emma', tod:'Evening',   type:'task',     done:true},
-    {id:'r7', name:'Bedtime story',   member:'emma', tod:'Evening',   type:'together', done:false},
-    {id:'r8', name:'Get dressed',     member:'leo',  tod:'Morning',   type:'task',     done:false},
-    {id:'r9', name:'Brush teeth',     member:'leo',  tod:'Morning',   type:'task',     done:true},
-    {id:'r10',name:'Morning hug',     member:'leo',  tod:'Morning',   type:'together', done:true},
-    {id:'r11',name:'Afternoon play',  member:'leo',  tod:'Afternoon', type:'together', done:false},
-    {id:'r12',name:'Put pyjamas on',  member:'leo',  tod:'Evening',   type:'task',     done:false},
-    {id:'r13',name:'Bedtime story',   member:'leo',  tod:'Evening',   type:'together', done:false},
-    {id:'r14',name:'Brush teeth',     member:'leo',  tod:'Evening',   type:'task',     done:false},
-  ],
-  prizes:[
-    {id:'p1',name:'Deluxe Art Set',  icon:'🎨',stars:25,member:'emma'},
-    {id:'p2',name:'Movie Night Pick',icon:'🎬',stars:10,member:'emma'},
-    {id:'p3',name:'Big Dino Book',   icon:'🦕',stars:15,member:'leo'},
-    {id:'p4',name:'Ice Cream Trip',  icon:'🍦',stars:5, member:'leo'},
-    {id:'p5',name:'Spa Evening',     icon:'🛁',stars:20,member:'mom1'},
-    {id:'p6',name:'Date Night',      icon:'💃',stars:20,member:'mom2'},
-  ],
-  events:[
-    {id:'e1',name:'Soccer Practice',   date:'2025-01-14',time:'4:00 PM', endtime:'5:30 PM', member:'emma', loc:'Riverside Fields'},
-    {id:'e2',name:'Work Call',          date:'2025-01-14',time:'2:00 PM', endtime:'3:00 PM', member:'mom2', loc:'Zoom'},
-    {id:'e3',name:'Taco Tuesday Dinner',date:'2025-01-14',time:'6:30 PM', endtime:'',        member:'family',loc:'Home'},
-    {id:'e4',name:'Story Time',         date:'2025-01-14',time:'7:30 PM', endtime:'8:00 PM', member:'leo',  loc:''},
-    {id:'e5',name:'Dentist Appt',       date:'2025-01-17',time:'10:00 AM',endtime:'11:00 AM',member:'emma', loc:'Family Dental'},
-    {id:'e6',name:'Leo Playdate',       date:'2025-01-19',time:'2:00 PM', endtime:'4:00 PM', member:'leo',  loc:'Park'},
-  ],
-  meals:[
-    {id:'m1',day:'Monday',   type:'Dinner',   name:'Spaghetti & Meatballs'},
-    {id:'m2',day:'Tuesday',  type:'Dinner',   name:'Taco Tuesday! 🌮'},
-    {id:'m3',day:'Wednesday',type:'Dinner',   name:'Grilled Chicken'},
-    {id:'m4',day:'Thursday', type:'Dinner',   name:'Mac & Cheese'},
-    {id:'m5',day:'Friday',   type:'Dinner',   name:'Pizza Night 🍕'},
-    {id:'m6',day:'Monday',   type:'Breakfast',name:'Pancakes'},
-    {id:'m7',day:'Tuesday',  type:'Breakfast',name:'Cereal & Fruit'},
-    {id:'m8',day:'Wednesday',type:'Breakfast',name:'Eggs & Toast'},
-  ],
-  groceries:[
-    {id:'g1', name:'Ground beef',     qty:'1 lb',  cat:'Meat & Protein',store:'Publix', done:false,doneAt:null},
-    {id:'g2', name:'Chicken breasts', qty:'4 pcs', cat:'Meat & Protein',store:'Publix', done:false,doneAt:null},
-    {id:'g3', name:'Lettuce',         qty:'1 bag', cat:'Produce',       store:'Publix', done:false,doneAt:null},
-    {id:'g4', name:'Tomatoes',        qty:'4 roma',cat:'Produce',       store:'Publix', done:false,doneAt:null},
-    {id:'g5', name:'Bell peppers',    qty:'3',     cat:'Produce',       store:'Publix', done:false,doneAt:null},
-    {id:'g6', name:'Shredded cheddar',qty:'2 cups',cat:'Dairy',         store:'Publix', done:true, doneAt:Date.now()-3600000},
-    {id:'g7', name:'Sour cream',      qty:'8 oz',  cat:'Dairy',         store:'Publix', done:false,doneAt:null},
-    {id:'g8', name:'Taco shells',     qty:'1 box', cat:'Pantry',        store:'Publix', done:false,doneAt:null},
-    {id:'g9', name:'Spaghetti pasta', qty:'1 lb',  cat:'Pantry',        store:'Kroger', done:false,doneAt:null},
-    {id:'g10',name:'Paper towels',    qty:'2 pk',  cat:'Household',     store:'Target', done:false,doneAt:null},
-    {id:'g11',name:'Laundry pods',    qty:'1 box', cat:'Household',     store:'Costco', done:false,doneAt:null},
-    {id:'g12',name:'Kids vitamins',   qty:'1 btl', cat:'Other',         store:'Amazon', done:false,doneAt:null},
-  ],
-  notes:[
-    {id:'n1',from:'mom1',title:'Nanny Instructions — Monday',body:'Emma has soccer at 4pm. Please pack her bag.',checklist:[{text:'Give Leo afternoon snack',done:false},{text:'Pack Emma soccer bag',done:true},{text:'Pick up Emma at 5:30pm',done:false}],pinned:true,createdAt:Date.now()-86400000},
-    {id:'n2',from:'mom2',title:'We are out of milk and bananas',body:'Please add to the shopping list!',checklist:[],pinned:false,createdAt:Date.now()-7200000},
-  ],
+  members:[],
+  chores:[],
+  routines:[],
+  prizes:[],
+  events:[],
+  meals:[],
+  groceries:[],
+  notes:[],
 };
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  STORAGE
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function loadData(){
   try{
     const s=localStorage.getItem('familyhub_v5');
@@ -921,7 +1042,7 @@ function importData(){
 
 let {members,chores,prizes,events,meals,groceries,notes,routines} = loadData();
 
-// Calendar hour range settings — stored separately so they survive data import
+// Calendar hour range settings \u2014 stored separately so they survive data import
 function loadCalSettings(){
   try{const s=localStorage.getItem('fh_cal_settings');if(s)return JSON.parse(s);}catch(e){}
   return {startHour:6, endHour:22};
@@ -931,25 +1052,31 @@ function saveCalSettings(){
 }
 const _cs=loadCalSettings();
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  STATE
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 let pinBuf='',calView='week',calDate=new Date();
 let shopTab='all',editEventId=null,editMealId=null,editNoteId=null;
-let editMemId=null,selIcon='😊',selColor=COLORS[0];
+let editMemId=null,selIcon='\u{1F60A}',selColor=COLORS[0];
 let calStartHour=_cs.startHour, calEndHour=_cs.endHour;
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  UTILS
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function $(id){return document.getElementById(id);}
 function el(tag,cls,style){const e=document.createElement(tag);if(cls)e.className=cls;if(style)e.style.cssText=style;return e;}
 function sm(id){$(id).classList.remove('hid');}
 function cm(id){$(id).classList.add('hid');}
 function todayStr(){return new Date().toISOString().split('T')[0];}
 
-// Custom confirm — replaces browser confirm() which Safari blocks on local/GitHub-hosted files
-function appConfirm({icon='⚠️', title='Are you sure?', msg='', yesLabel='Confirm', yesClass='', noLabel='Cancel'}, cb){
+// Custom confirm \u2014 replaces browser confirm() which Safari blocks on local/GitHub-hosted files
+function appConfirm(opts, cb){
+  var icon=opts.icon||'!';
+  var title=opts.title||'Are you sure?';
+  var msg=opts.msg||'';
+  var yesLabel=opts.yesLabel||'Confirm';
+  var yesClass=opts.yesClass||'';
+  var noLabel=opts.noLabel||'Cancel';
   $('acd-icon').textContent=icon;
   $('acd-title').textContent=title;
   $('acd-msg').textContent=msg;
@@ -963,13 +1090,21 @@ function appConfirm({icon='⚠️', title='Are you sure?', msg='', yesLabel='Con
   no.onclick=()=>{cleanup();cb(false);};
 }
 function getMC(id){
-  if(id==='family')return{color:'#94A3B8',icon:'👪',name:'Family'};
-  return members.find(m=>m.id===id)||{color:'#888',icon:'👤',name:id};
+  if(id==='family')return{color:'#94A3B8',icon:'\uD83D\uDC6A',name:'Family'};
+  return members.find(m=>m.id===id)||{color:'#888',icon:'\uD83D\uDC64',name:id};
+}
+// Caregivers always sort last
+function sortedMembers(){
+  return members.slice().sort(function(a,b){
+    var ac=a.role==='caregiver'?1:0;
+    var bc=b.role==='caregiver'?1:0;
+    return ac-bc;
+  });
 }
 function popMemberSel(id,withFamily){
   const s=$(id);
-  s.innerHTML=(withFamily?'<option value="family">👪 Family</option>':'')+
-    members.map(m=>`<option value="${m.id}">${m.icon} ${m.name}</option>`).join('');
+  s.innerHTML=(withFamily?'<option value="family">\uD83D\uDC6A Family</option>':'')+
+    sortedMembers().map(m=>`<option value="${m.id}">${m.icon} ${m.name}</option>`).join('');
 }
 function timeValToDisplay(tv){
   if(!tv)return'';
@@ -984,42 +1119,169 @@ function timeDisplayToVal(ts){
   return`${String(h).padStart(2,'0')}:${mi}`;
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  NAVIGATION
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function navTo(p){
   document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
   $('pg-'+p).classList.add('on');
   const nb=$('nb-'+p);if(nb)nb.classList.add('on');
-  ({home:renderHome,chores:renderChores,routines:renderRoutines,cal:renderCal,meals:renderMeals,
-    shop:renderShop,stars:renderStars,notes:renderNotes,parent:renderParent})[p]?.();
+  var _rf={home:renderHome,chores:renderChores,routines:renderRoutines,cal:renderCal,meals:renderMeals,
+    shop:renderShop,stars:renderStars,notes:renderNotes,parent:renderParent};
+  if(_rf[p])_rf[p]();
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  HOME
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// ── Looking Forward To (countdowns) ──
+var NBT_KEY='kinori_nbt';
+var selNbtIcon='\uD83C\uDF89';
+var editNbtId=null;
+
+function getNbts(){
+  try{
+    var s=localStorage.getItem(NBT_KEY);
+    if(s){
+      var parsed=JSON.parse(s);
+      // Migrate old single-object format to array
+      if(parsed&&!Array.isArray(parsed)) return [parsed];
+      return parsed||[];
+    }
+  }catch(e){}
+  return [];
+}
+function setNbts(arr){try{localStorage.setItem(NBT_KEY,JSON.stringify(arr));}catch(e){}}
+
+function buildIcoLibInto(lib,selVar,setFn){
+  lib.innerHTML='';
+  var extra={};
+  extra['\uD83C\uDF89 Celebrations']=['\uD83C\uDF89','\uD83C\uDF88','\uD83E\uDD73','\uD83C\uDF82','\uD83C\uDF81','\uD83C\uDFC6','\uD83E\uDD47','\uD83E\uDD48','\uD83C\uDF1F','\uD83D\uDC8E'];
+  extra['\u2708\uFE0F Travel']=['\u2708\uFE0F','\uD83C\uDF34','\uD83C\uDFD6\uFE0F','\uD83C\uDFD4\uFE0F','\uD83C\uDF0D','\uD83C\uDFEE','\u26FA\uFE0F','\uD83D\uDE97'];
+  var allCats=Object.assign(extra,ICONS);
+  Object.keys(allCats).forEach(function(cat){
+    var icons=allCats[cat];
+    var lb=el('div','ico-cat-lbl');lb.textContent=cat;lib.appendChild(lb);
+    var grid=el('div','ico-grid');
+    icons.forEach(function(ico){
+      var btn=el('div','ico-btn'+(ico===selVar?' sel':''));
+      btn.textContent=ico;btn.title=ico;
+      btn.onclick=function(){
+        setFn(ico);
+        lib.querySelectorAll('.ico-btn').forEach(function(b){b.classList.remove('sel');});
+        btn.classList.add('sel');
+      };
+      grid.appendChild(btn);
+    });
+    lib.appendChild(grid);
+  });
+}
+function buildNbtIcoLib(){
+  buildIcoLibInto($('nbt-ico-lib'),selNbtIcon,function(ico){
+    selNbtIcon=ico;$('nbt-icon').value=ico;$('nbt-ico-prev').textContent=ico;
+  });
+}
+var selPrizeIcon='\uD83C\uDFC6';
+function buildPrizeIcoLib(){
+  buildIcoLibInto($('prize-ico-lib'),selPrizeIcon,function(ico){
+    selPrizeIcon=ico;$('pi-icon').value=ico;$('pi-prev').textContent=ico;
+  });
+}
+
+function renderNbt(){
+  var d=$('nbt-display');if(!d)return;
+  var now=new Date();now.setHours(0,0,0,0);
+  var nbts=getNbts();
+  // Filter out past events
+  var active=nbts.filter(function(e){
+    var then=new Date(e.date+'T00:00:00');
+    return Math.ceil((then-now)/(1000*60*60*24))>=0;
+  });
+  // Remove past ones from storage if any changed
+  if(active.length!==nbts.length) setNbts(active);
+  if(!active.length){
+    d.innerHTML='<div style="text-align:center;padding:14px;color:var(--tx3);font-size:12px;font-weight:700;">Tap + Add to set a countdown</div>';
+    return;
+  }
+  // Sort by date ascending
+  active.sort(function(a,b){return a.date.localeCompare(b.date);});
+  d.innerHTML='';
+  active.forEach(function(nbt){
+    var then=new Date(nbt.date+'T00:00:00');
+    var diff=Math.ceil((then-now)/(1000*60*60*24));
+    var label=diff===0?'Today!':diff===1?'Tomorrow':diff+' days away';
+    var card=el('div','cdbar','margin-bottom:8px;cursor:pointer;background:linear-gradient(135deg,var(--am),var(--amd));');
+    var dateStr=new Date(nbt.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    card.innerHTML='<div style="font-size:26px;">'+(nbt.icon||'\uD83C\uDF89')+'</div>'
+      +'<div style="flex:1;"><div style="font-size:14px;font-weight:800;color:#fff;">'+nbt.name+'</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,.8);margin-top:1px;">'+label+' \u00B7 '+dateStr+'</div></div>'
+      +'<div style="font-size:'+(diff<=9?'32':'26')+'px;font-weight:900;line-height:1;color:#fff;margin-right:4px;">'+(diff===0?'\uD83C\uDF89':diff)+'</div>'
+      +'<div style="font-size:16px;color:rgba(255,255,255,.7);padding:4px 2px 4px 8px;flex-shrink:0;">\u270F\uFE0F</div>';
+    card.onclick=function(){openNbtModal(nbt.id);};
+    d.appendChild(card);
+  });
+}
+
+function openNbtModal(id){
+  var nbts=getNbts();
+  var nbt=id?nbts.find(function(e){return e.id===id;}):null;
+  editNbtId=nbt?nbt.id:null;
+  selNbtIcon=nbt?(nbt.icon||'\uD83C\uDF89'):'\uD83C\uDF89';
+  $('nbt-modal-title').textContent=nbt?'Edit':'Add';
+  $('nbt-name').value=nbt?nbt.name:'';
+  $('nbt-icon').value=nbt?(nbt.icon||''):'';
+  $('nbt-ico-prev').textContent=selNbtIcon;
+  $('nbt-date').value=nbt?nbt.date:'';
+  $('nbt-del').style.display=nbt?'block':'none';
+  buildNbtIcoLib();
+  sm('m-nbt');
+}
+
+function saveNbt(){
+  var n=$('nbt-name').value.trim();if(!n)return;
+  var dt=$('nbt-date').value;if(!dt)return;
+  var ico=$('nbt-icon').value||selNbtIcon||'\uD83C\uDF89';
+  var nbts=getNbts();
+  if(editNbtId){
+    var idx=nbts.findIndex(function(e){return e.id===editNbtId;});
+    if(idx>=0) nbts[idx]={id:editNbtId,name:n,icon:ico,date:dt};
+  } else {
+    nbts.push({id:'nbt'+Date.now(),name:n,icon:ico,date:dt});
+  }
+  setNbts(nbts);cm('m-nbt');renderNbt();
+}
+
+function deleteNbt(){
+  appConfirm({icon:'!',title:'Remove this event?',msg:'',yesLabel:'Remove',noLabel:'Keep'},function(ok){
+    if(!ok)return;
+    var nbts=getNbts().filter(function(e){return e.id!==editNbtId;});
+    setNbts(nbts);cm('m-nbt');renderNbt();
+  });
+}
+
 function renderHome(){
   const now=new Date();const h=now.getHours();
-  $('hg').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';
+  $('hg').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+getFamilyName()+' \uD83D\uDC4B';
   $('hd').textContent=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  renderNbt();
   // Today's events
   const ew=$('home-events');ew.innerHTML='';
   const te=events.filter(e=>e.date===todayStr()).sort((a,b)=>a.time.localeCompare(b.time));
-  if(!te.length){ew.innerHTML='<div style="text-align:center;padding:12px;color:var(--tx3);font-size:12px;font-weight:700;">No events today 😊</div>';}
+  if(!te.length){ew.innerHTML='<div style="text-align:center;padding:12px;color:var(--tx3);font-size:12px;font-weight:700;">No events today \uD83D\uDE0A</div>';}
   else te.forEach(ev=>{
     const m=getMC(ev.member);
     const c=el('div','today-ev');
     c.innerHTML=`<div style="width:9px;height:9px;border-radius:50%;background:${m.color};margin-top:4px;flex-shrink:0;"></div>
       <div><div style="font-size:13px;font-weight:700;">${ev.name}</div>
-      <div style="font-size:11px;color:var(--tx3);">${ev.time}${ev.loc?' · '+ev.loc:''} <span style="background:${m.color}22;color:${m.color};padding:1px 6px;border-radius:8px;font-weight:800;font-size:10px;">${m.icon} ${m.name}</span></div></div>`;
+      <div style="font-size:11px;color:var(--tx3);">${ev.time}${ev.loc?' \u00B7 '+ev.loc:''} <span style="background:${m.color}22;color:${m.color};padding:1px 6px;border-radius:8px;font-weight:800;font-size:10px;">${m.icon} ${m.name}</span></div></div>`;
     c.onclick=()=>navTo('cal');ew.appendChild(c);
   });
-  // Star leaderboard
+  // Star leaderboard — exclude caregivers
   const sr=$('home-stars');sr.innerHTML='';
-  const sorted=[...members].sort((a,b)=>b.stars-a.stars);
-  const maxS=sorted[0]?.stars||1;
-  ['🥇','🥈','🥉'].forEach((medal,i)=>{
+  const sorted=[...members].filter(m=>m.role!=='caregiver').sort((a,b)=>b.stars-a.stars);
+  const maxS=(sorted[0]&&sorted[0].stars)||1;
+  ['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'].forEach((medal,i)=>{
     const m=sorted[i];if(!m)return;
     const gp=prizes.find(p=>p.id===m.goalPrize);
     const pct=gp?Math.min(100,Math.round(m.stars/gp.stars*100)):100;
@@ -1028,9 +1290,9 @@ function renderHome(){
       <div style="width:44px;height:44px;border-radius:50%;background:${m.color}22;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${m.icon}</div>
       <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${m.name}</div>
       <div class="src-prog"><div class="src-fill" style="width:${Math.round(m.stars/maxS*100)}%;background:${m.color};"></div></div>
-      ${gp?`<div style="font-size:10px;color:var(--tx3);margin-top:2px;">${gp.icon} ${gp.name} — ${pct}% there</div>`:''}
+      ${gp?`<div style="font-size:10px;color:var(--tx3);margin-top:2px;">${gp.icon} ${gp.name} \u2014 ${pct}% there</div>`:''}
       </div>
-      <div style="font-size:24px;font-weight:900;color:${m.color};">⭐${m.stars}</div>`;
+      <div style="font-size:24px;font-weight:900;color:${m.color};">\u2B50${m.stars}</div>`;
     c.onclick=()=>navTo('stars');sr.appendChild(c);
   });
   if(sorted.length>3){
@@ -1039,16 +1301,16 @@ function renderHome(){
       c.innerHTML=`<div style="width:28px;height:28px;border-radius:50%;background:var(--sf2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--tx3);flex-shrink:0;">${i+4}</div>
         <div style="width:44px;height:44px;border-radius:50%;background:${m.color}22;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${m.icon}</div>
         <div style="font-size:13px;font-weight:800;flex:1;">${m.name}</div>
-        <div style="font-size:22px;font-weight:900;color:${m.color};">⭐${m.stars}</div>`;
+        <div style="font-size:22px;font-weight:900;color:${m.color};">\u2B50${m.stars}</div>`;
       c.onclick=()=>navTo('stars');sr.appendChild(c);
     });
   }
   renderBonusGrid();
 }
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderChores(){
   const cols=$('chore-cols');cols.innerHTML='';
-  members.forEach(m=>{
+  sortedMembers().forEach(m=>{
     const mc=chores.filter(c=>c.member===m.id);
     const done=mc.filter(c=>c.done).length;
     const pct=mc.length?Math.round(done/mc.length*100):0;
@@ -1063,14 +1325,16 @@ function renderChores(){
     const body=el('div','ccol-body');
     mc.forEach(c=>{
       const item=el('div','ci'+(c.done?' done':''));
-      item.innerHTML=`<div class="cchk${c.done?' done':''}" style="border-color:${m.color};${c.done?'background:'+m.color+';':''}">${c.done?'✓':''}</div>
-        <div style="flex:1;"><div style="font-size:12px;font-weight:700;${c.done?'text-decoration:line-through;':''}">${c.name}</div>
-        <div style="font-size:9px;color:var(--tx3);margin-top:1px;">${c.freq} · +${c.stars}⭐</div></div>`;
+      item.innerHTML='<div class="cchk'+(c.done?' done':'')+'" style="border-color:'+m.color+';'+(c.done?'background:'+m.color+';':'')+'">'+( c.done?'\u2713':'')+'</div>'
+        +'<div style="flex:1;"><div style="font-size:12px;font-weight:700;'+(c.done?'text-decoration:line-through;':'')+'">'+ c.name+'</div>'
+        +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+c.freq+' \u00B7 +'+c.stars+'\u2B50</div></div>'
+        +'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;flex-shrink:0;" data-cid="'+c.id+'">\u270F\uFE0F</div>';
+      item.querySelector('[data-cid]').onclick=function(e){e.stopPropagation();openEditChore(c.id);};
       item.onclick=()=>doChore(c,m,item);
       body.appendChild(item);
     });
     const ab=el('button','add-row','margin:5px 0 0;font-size:11px;padding:7px 9px;');
-    ab.innerHTML='＋ Add contribution';
+    ab.innerHTML='\uFF0B Add contribution';
     ab.onclick=()=>{popMemberSel('ci-mem');$('ci-mem').value=m.id;sm('m-chore');};
     body.appendChild(ab);col.appendChild(body);cols.appendChild(col);
   });
@@ -1078,7 +1342,7 @@ function renderChores(){
 function doChore(c,m,item){
   if(c.done){
     appConfirm({
-      icon:'↩️',
+      icon:'\u21A9\uFE0F',
       title:'Un-complete contribution?',
       msg:'"'+c.name+'" will be unchecked and '+c.stars+' star'+(c.stars>1?'s':'')+' will be removed from '+m.name+'.',
       yesLabel:'Yes, undo it',
@@ -1100,9 +1364,9 @@ function doChore(c,m,item){
   showCel(m,c.stars,c.name,!!earned,earned||null);
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  CALENDAR
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderCal(){
   buildLeg();
   if(calView==='month')renderMonth();
@@ -1112,7 +1376,7 @@ function renderCal(){
 function buildLeg(){
   const l=$('cal-leg');l.innerHTML='';
   members.forEach(m=>l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:${m.color};"></div>${m.icon} ${m.name}</div>`);
-  l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:#94A3B8;"></div>👪 Family</div>`;
+  l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:#94A3B8;"></div>\uD83D\uDC6A Family</div>`;
 }
 function switchCalV(v,e2){calView=v;['m','w','d'].forEach(x=>$('cvt-'+x).classList.remove('on'));e2.classList.add('on');renderCal();}
 function calNav(d){
@@ -1147,7 +1411,7 @@ function renderMonth(){
 function renderWeek(){
   const ws=new Date(calDate.getTime()-calDate.getDay()*864e5);
   const days=Array.from({length:7},(_,i)=>new Date(ws.getTime()+i*864e5));
-  $('cal-title').textContent=MONTHS[days[0].getMonth()].slice(0,3)+' '+days[0].getDate()+' – '+days[6].getDate();
+  $('cal-title').textContent=MONTHS[days[0].getMonth()].slice(0,3)+' '+days[0].getDate()+' \u2013 '+days[6].getDate();
   const body=$('cal-body');body.innerHTML='';
   body.style.cssText='flex:1;overflow:hidden;display:flex;flex-direction:column;padding:4px 0;';
   const today=new Date();
@@ -1155,7 +1419,7 @@ function renderWeek(){
   const hours=[];
   for(let h=calStartHour;h<=calEndHour;h++)hours.push(h);
 
-  // Helper: time string "4:30 PM" → decimal hours (16.5)
+  // Helper: time string "4:30 PM" \u2192 decimal hours (16.5)
   function t2d(ts){
     if(!ts)return null;
     const m=ts.match(/^(\d+):(\d+)\s*(AM|PM)$/i);if(!m)return null;
@@ -1176,7 +1440,7 @@ function renderWeek(){
   // Scrollable timed grid
   const scrollArea=el('div','',`flex:1;overflow-y:auto;padding:0 2px 8px;`);
 
-  // Outer container — relative for event overlays
+  // Outer container \u2014 relative for event overlays
   const container=el('div','',`position:relative;`);
 
   // Background grid rows (hour lines + labels)
@@ -1192,7 +1456,7 @@ function renderWeek(){
   });
   container.appendChild(bgGrid);
 
-  // Event overlays — one per day column
+  // Event overlays \u2014 one per day column
   days.forEach((d,di)=>{
     const ds=d.toISOString().split('T')[0];
     const dayEvs=events.filter(e=>e.date===ds);
@@ -1203,7 +1467,7 @@ function renderWeek(){
     // We calculate left% based on column index: label col is 44px, rest split equally
     // Use a wrapper approach: overlay sits inside container absolutely
     const colOverlay=el('div','',`position:absolute;top:0;bottom:0;pointer-events:none;`);
-    // We'll set left/width after appending — use a data attribute
+    // We'll set left/width after appending \u2014 use a data attribute
     colOverlay.dataset.col=di;
     container.appendChild(colOverlay);
 
@@ -1234,7 +1498,7 @@ function renderWeek(){
         line-height:1.3;
       `);
       evDiv.innerHTML=`<div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ev.name}</div>`+
-        (heightPx>28?`<div style="opacity:.85;font-size:9px;">${ev.time}${ev.endtime?' – '+ev.endtime:''}</div>`:'');
+        (heightPx>28?`<div style="opacity:.85;font-size:9px;">${ev.time}${ev.endtime?' \u2013 '+ev.endtime:''}</div>`:'');
       evDiv.onclick=e2=>{e2.stopPropagation();openAddEvent(ev.id);};
       colOverlay.appendChild(evDiv);
     });
@@ -1248,9 +1512,9 @@ function renderWeek(){
     const cells=bgGrid.querySelectorAll('div');
     // First cell of each day column is at index: 1+di (skipping label cell each row)
     // But actually the first row has indices 0..7 (label + 7 day cells)
-    // Day column di → bgGrid child index (di+1) in first row
+    // Day column di \u2192 bgGrid child index (di+1) in first row
     const firstRowDayCells=Array.from(bgGrid.children).slice(0,8+1); // first row
-    // Actually bgGrid children interleave rows — get column widths from first row cells
+    // Actually bgGrid children interleave rows \u2014 get column widths from first row cells
     const allCells=Array.from(bgGrid.children);
     const numCols=8; // label + 7 days
     days.forEach((d,di)=>{
@@ -1271,20 +1535,20 @@ function renderDay(){
   const body=$('cal-body');body.innerHTML='';
   const ds=calDate.toISOString().split('T')[0];
   const de=events.filter(e=>e.date===ds).sort((a,b)=>a.time.localeCompare(b.time));
-  if(!de.length){body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--tx3);font-size:13px;font-weight:700;">No events — tap + Add Event</div>';return;}
+  if(!de.length){body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--tx3);font-size:13px;font-weight:700;">No events \u2014 tap + Add</div>';return;}
   de.forEach(e=>body.appendChild(buildEvCard(e)));
 }
 function buildEvCard(e){
   const m=getMC(e.member);
-  const timeStr=e.time+(e.endtime?' – '+e.endtime:'');
+  const timeStr=e.time+(e.endtime?' \u2013 '+e.endtime:'');
   const c=el('div','ev-card');
   c.innerHTML=`<div style="width:9px;height:9px;border-radius:50%;background:${m.color};margin-top:4px;flex-shrink:0;"></div>
     <div style="flex:1;">
       <div style="font-size:13px;font-weight:700;">${e.name}</div>
-      <div style="font-size:11px;color:var(--tx3);margin-top:1px;">${timeStr}${e.loc?' · '+e.loc:''}</div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:1px;">${timeStr}${e.loc?' \u00B7 '+e.loc:''}</div>
       <span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;margin-top:4px;background:${m.color}20;color:${m.color};">${m.icon} ${m.name}</span>
     </div>
-    <div style="font-size:12px;color:var(--tx3);font-weight:700;">✏️</div>`;
+    <div style="font-size:12px;color:var(--tx3);font-weight:700;">\u270F\uFE0F</div>`;
   c.onclick=()=>openAddEvent(e.id);
   return c;
 }
@@ -1294,7 +1558,7 @@ function openAddEvent(eid){
   popMemberSel('ei-mem',true);
   if(eid){
     const ev=events.find(e=>e.id===eid);if(!ev)return;
-    $('ev-modal-title').textContent='Edit Event';
+    $('ev-modal-title').textContent='Edit';
     $('ei-name').value=ev.name;
     $('ei-date').value=ev.date;
     $('ei-time').value=timeDisplayToVal(ev.time);
@@ -1303,7 +1567,7 @@ function openAddEvent(eid){
     $('ei-loc').value=ev.loc||'';
     $('ei-del').style.display='block';
   } else {
-    $('ev-modal-title').textContent='Add Event';
+    $('ev-modal-title').textContent='Add';
     $('ei-name').value='';$('ei-date').value=todayStr();
     $('ei-time').value='';$('ei-endtime').value='';
     $('ei-mem').value='family';$('ei-loc').value='';
@@ -1325,16 +1589,16 @@ function saveEvent(){
 }
 function deleteEvent(){
   if(!editEventId)return;
-  appConfirm({icon:'🗑️',title:'Delete event?',msg:'This event will be permanently removed.',yesLabel:'Delete',noLabel:'Cancel'},ok=>{
+  appConfirm({icon:'\uD83D\uDDD1\uFE0F',title:'Delete event?',msg:'This event will be permanently removed.',yesLabel:'Delete',noLabel:'Cancel'},ok=>{
     if(!ok)return;
     events=events.filter(e=>e.id!==editEventId);
     cm('m-event');saveData();renderCal();
   });
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  MEALS
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderMeals(){
   const body=$('meals-body');body.innerHTML='';
   const todayName=new Date().toLocaleDateString('en-US',{weekday:'long'});
@@ -1354,9 +1618,11 @@ function renderMeals(){
       const ms=meals.filter(m=>m.day===day&&m.type===type);
       const cell=el('div','meal-cell',`background:${bg};border:${isT?'2px solid var(--am)':'1.5px solid transparent'};`);
       if(ms.length){
-        ms.forEach(m2=>{cell.innerHTML+=`<div style="font-size:11px;font-weight:700;color:${tc};">${m2.name}</div>`;});
-        // click on filled cell → edit first meal in slot
-        cell.onclick=()=>openMealModal(ms[0].id,day,type);
+        ms.forEach(function(m2){
+          var noteInd=m2.notes?'<span style="font-size:9px;opacity:.65;margin-left:2px;">\uD83D\uDCCB</span>':'';
+          cell.innerHTML+='<div style="font-size:11px;font-weight:700;color:'+tc+';">'+m2.name+noteInd+'</div>';
+        });
+        cell.onclick=function(){openMealModal(ms[0].id,day,type);};
       } else {
         cell.innerHTML=`<div style="font-size:13px;color:${tc}66;text-align:center;">+</div>`;
         cell.onclick=()=>openMealModal(null,day,type);
@@ -1372,10 +1638,11 @@ function openMealModal(mid,day,type){
     const m=meals.find(x=>x.id===mid);if(!m)return;
     $('meal-modal-title').textContent='Edit Meal';
     $('mi-name').value=m.name;$('mi-day').value=m.day;$('mi-type').value=m.type;
+    $('mi-notes').value=m.notes||'';
     $('mi-del').style.display='block';
   } else {
     $('meal-modal-title').textContent='Add Meal';
-    $('mi-name').value='';
+    $('mi-name').value='';$('mi-notes').value='';
     if(day)$('mi-day').value=day;
     if(type)$('mi-type').value=type;
     $('mi-del').style.display='none';
@@ -1384,26 +1651,27 @@ function openMealModal(mid,day,type){
 }
 function saveMeal(){
   const n=$('mi-name').value.trim();if(!n)return;
+  const notes=$('mi-notes').value.trim();
   if(editMealId){
     const m=meals.find(x=>x.id===editMealId);
-    if(m){m.name=n;m.day=$('mi-day').value;m.type=$('mi-type').value;}
+    if(m){m.name=n;m.day=$('mi-day').value;m.type=$('mi-type').value;m.notes=notes;}
   } else {
-    meals.push({id:'m'+Date.now(),name:n,day:$('mi-day').value,type:$('mi-type').value});
+    meals.push({id:'m'+Date.now(),name:n,day:$('mi-day').value,type:$('mi-type').value,notes:notes});
   }
   cm('m-meal');saveData();renderMeals();
 }
 function deleteMeal(){
   if(!editMealId)return;
-  appConfirm({icon:'🍽️',title:'Remove meal?',msg:'This meal will be removed from the plan.',yesLabel:'Remove',noLabel:'Keep it'},ok=>{
+  appConfirm({icon:'\uD83C\uDF7D\uFE0F',title:'Remove meal?',msg:'This meal will be removed from the plan.',yesLabel:'Remove',noLabel:'Keep it'},ok=>{
     if(!ok)return;
     meals=meals.filter(m=>m.id!==editMealId);
     cm('m-meal');saveData();renderMeals();
   });
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  SHOPPING
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderShop(){
   // Auto-remove items done > DONE_HOURS ago
   const now=Date.now();
@@ -1420,25 +1688,33 @@ function renderShop(){
     const isAll=store==='all';
     const color=isAll?'#374151':getStoreColor(store);
     const isActive=shopTab===store;
+    const isCustom=!isAll&&customStores.some(s=>s.name===store);
+
+    // Wrapper for tab + edit button
+    const wrap=el('div','',`display:flex;align-items:center;gap:2px;`);
+
     const btn=el('button','store-tab'+(isActive?' on':''));
     btn.style.borderColor=color;
     btn.style.color=isActive?'#fff':color;
     if(isActive) btn.style.background=color;
     if(!isAll){
-      // Show edit pencil on active store tab
-      btn.innerHTML=`${getStoreIcon(store)} ${store}${isActive?' <span style="font-size:10px;opacity:.8;margin-left:3px;">✏️</span>':''}`;
+      btn.textContent=getStoreIcon(store)+' '+store;
     } else {
-      btn.textContent='🛒 All Stores';
+      btn.textContent='\uD83D\uDED2 All Stores';
     }
-    btn.onclick=()=>{
-      if(!isAll && shopTab===store){
-        // Second tap on active store → open edit
-        openEditStore(customStores.find(s=>s.name===store)?.id);
-      } else {
-        shopTab=store; renderShop();
-      }
-    };
-    tabsEl.appendChild(btn);
+    btn.onclick=function(){shopTab=store;renderShop();};
+    wrap.appendChild(btn);
+
+    // Edit pencil for custom stores
+    if(isCustom){
+      const edit=el('button','','padding:4px 6px;border:1.5px solid '+color+';border-radius:8px;background:transparent;color:'+color+';font-size:12px;cursor:pointer;line-height:1;flex-shrink:0;');
+      edit.textContent='\u270F\uFE0F';
+      edit.title='Edit store';
+      edit.onclick=function(){var _st=customStores.find(s=>s.name===store);if(_st)openEditStore(_st.id);};
+      wrap.appendChild(edit);
+    }
+
+    tabsEl.appendChild(wrap);
   });
 
   const body=$('shop-body');body.innerHTML='';
@@ -1464,79 +1740,137 @@ function renderShop(){
       items.filter(g=>g.cat===cat).forEach(g=>body.appendChild(buildGrocRow(g)));
     });
   });
-  if(!anyShown)body.innerHTML+='<div style="text-align:center;padding:32px 0;color:var(--tx3);font-size:13px;font-weight:700;">🎉 All done! Nothing left to get.</div>';
+  if(!anyShown)body.innerHTML+='<div style="text-align:center;padding:32px 0;color:var(--tx3);font-size:13px;font-weight:700;">\uD83C\uDF89 All done! Nothing left to get.</div>';
 
   // Done items
   const doneItems=groceries.filter(g=>g.done);
   if(doneItems.length){
-    const dlb=el('div','slbl','margin:14px 0 5px;opacity:.55;');dlb.textContent=`✓ Recently checked off (${doneItems.length})`;body.appendChild(dlb);
+    const dlb=el('div','slbl','margin:14px 0 5px;opacity:.55;');dlb.textContent=`\u2713 Recently checked off (${doneItems.length})`;body.appendChild(dlb);
     const dnt=el('div','',`font-size:10px;color:var(--tx3);font-weight:700;margin-bottom:7px;`);
     dnt.textContent=`Items auto-remove after ${DONE_HOURS} hours`;body.appendChild(dnt);
     doneItems.forEach(g=>body.appendChild(buildGrocRow(g)));
   }
-  const ab=el('button','add-row','margin-top:10px;');ab.innerHTML='＋ Add item';ab.onclick=openAddGrocery;body.appendChild(ab);
+  const ab=el('button','add-row','margin-top:10px;');ab.innerHTML='\uFF0B Add item';ab.onclick=openAddGrocery;body.appendChild(ab);
 }
 function buildGrocRow(g){
   const row=el('div','gr-row',g.done?'opacity:.5;':'');
   const h=g.done&&g.doneAt?Math.max(0,Math.ceil((DONE_HOURS*3600000-(Date.now()-g.doneAt))/3600000)):null;
-  row.innerHTML=`<div class="gck${g.done?' on':''}">${g.done?'✓':''}</div>
-    <div style="flex:1;"><div style="font-size:13px;font-weight:600;${g.done?'text-decoration:line-through;color:var(--tx3);':''}"> ${g.name}</div>
-    ${g.done&&h!==null?`<div style="font-size:10px;color:var(--tx3);">Removes in ~${h}h</div>`:''}</div>
-    <div style="font-size:11px;color:var(--tx3);font-weight:700;">${g.qty||''}</div>`;
-  row.onclick=()=>{g.done=!g.done;g.doneAt=g.done?Date.now():null;saveData();renderShop();};
+  var nameStyle=g.done?'text-decoration:line-through;color:var(--tx3);':'';
+  var removeHint=g.done&&h!==null?'<div style="font-size:10px;color:var(--tx3);">Removes in ~'+h+'h</div>':'';
+  row.innerHTML='<div class="gck'+(g.done?' on':'')+'">'+( g.done?'\u2713':'')+'</div>'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;'+nameStyle+'"> '+g.name+'</div>'+removeHint+'</div>'
+    +'<div style="font-size:11px;color:var(--tx3);font-weight:700;">'+(g.qty||'')+'</div>'
+    +'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;" data-edit-id="'+g.id+'">\u270F\uFE0F</div>';
+  row.querySelector('[data-edit-id]').onclick=function(e){e.stopPropagation();openEditGrocery(g.id);};
+  row.onclick=function(){g.done=!g.done;g.doneAt=g.done?Date.now():null;saveData();renderShop();};
   return row;
 }
+var editGroceryId=null;
 function openAddGrocery(){
-  // Populate store dropdown from customStores
-  $('gi-store').innerHTML = customStores.map(s=>`<option value="${s.name}">${s.icon} ${s.name}</option>`).join('');
-  $('gi-name').value=''; $('gi-qty').value='';
+  editGroceryId=null;
+  $('grocery-modal-title').textContent='Add Shopping Item';
+  $('gi-store').innerHTML=customStores.map(s=>'<option value="'+s.name+'">'+s.name+'</option>').join('');
+  $('gi-name').value='';$('gi-qty').value='';
+  $('gi-del').style.display='none';
+  sm('m-grocery');
+}
+function openEditGrocery(id){
+  var g=groceries.find(function(x){return x.id===id;});if(!g)return;
+  editGroceryId=id;
+  $('grocery-modal-title').textContent='Edit Item';
+  $('gi-store').innerHTML=customStores.map(s=>'<option value="'+s.name+'">'+s.name+'</option>').join('');
+  $('gi-name').value=g.name;$('gi-qty').value=g.qty||'';
+  $('gi-cat').value=g.cat||'Other';
+  $('gi-store').value=g.store||customStores[0].name;
+  $('gi-del').style.display='block';
   sm('m-grocery');
 }
 function saveGrocery(){
-  const n=$('gi-name').value.trim();if(!n)return;
-  groceries.push({id:'g'+Date.now(),name:n,qty:$('gi-qty').value,cat:$('gi-cat').value,store:$('gi-store').value,done:false,doneAt:null});
+  var n=$('gi-name').value.trim();if(!n)return;
+  if(editGroceryId){
+    var g=groceries.find(function(x){return x.id===editGroceryId;});
+    if(g){g.name=n;g.qty=$('gi-qty').value;g.cat=$('gi-cat').value;g.store=$('gi-store').value;}
+  } else {
+    groceries.push({id:'g'+Date.now(),name:n,qty:$('gi-qty').value,cat:$('gi-cat').value,store:$('gi-store').value,done:false,doneAt:null});
+  }
   cm('m-grocery');saveData();renderShop();
 }
+function deleteGrocery(){
+  if(!editGroceryId)return;
+  appConfirm({icon:'!',title:'Remove this item?',msg:'It will be deleted from the list.',yesLabel:'Remove',noLabel:'Keep'},function(ok){
+    if(!ok)return;
+    groceries=groceries.filter(function(g){return g.id!==editGroceryId;});
+    cm('m-grocery');saveData();renderShop();
+  });
+}
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  STARS
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderStars(){
   const body=$('stars-body');body.innerHTML='';
+
+  // Monthly tally section
+  const tally=getMonthlyTally();
+  const months=Object.keys(tally).sort().reverse();
+  if(months.length){
+    const tlbl=el('div','slbl');tlbl.textContent='\uD83D\uDCCA Monthly Tally';body.appendChild(tlbl);
+    const tcard=el('div','',`background:var(--sf);border-radius:14px;border:1.5px solid var(--bd);box-shadow:var(--sh);padding:12px 14px;margin-bottom:14px;overflow-x:auto;`);
+    // Header row
+    var tallyMems=sortedMembers().filter(function(m){return m.role!=='caregiver';});
+    const hdr=el('div','',`display:grid;grid-template-columns:80px repeat(${tallyMems.length},1fr);gap:6px;margin-bottom:6px;`);
+    hdr.innerHTML='<div style="font-size:10px;font-weight:800;color:var(--tx3);">Month</div>'+
+      tallyMems.map(m=>`<div style="font-size:10px;font-weight:800;color:${m.color};text-align:center;">${m.icon}</div>`).join('');
+    tcard.appendChild(hdr);
+    months.slice(0,12).forEach(mo=>{
+      const row=el('div','',`display:grid;grid-template-columns:80px repeat(${tallyMems.length},1fr);gap:6px;padding:4px 0;border-top:1px solid var(--bd);`);
+      var _msp=mo.split('-');var yr=_msp[0];var mn=_msp[1];
+      const moName=new Date(+yr,+mn-1,1).toLocaleString('en-US',{month:'short',year:'2-digit'});
+      row.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--tx2);">'+moName+'</div>'+
+        tallyMems.map(m=>{
+          var s=(tally[mo]&&tally[mo][m.id])||0;
+          return '<div style="font-size:12px;font-weight:800;color:'+(s?m.color:'var(--tx3)')+';text-align:center;">'+(s?('\u2B50'+s):'\u2014')+'</div>';
+        }).join('');
+      tcard.appendChild(row);
+    });
+    body.appendChild(tcard);
+  }
+
   const sg=el('div','star-grid');
-  members.forEach(m=>{
+  sortedMembers().filter(function(m){return m.role!=='caregiver';}).forEach(m=>{
     const gp=prizes.find(p=>p.id===m.goalPrize);
     const pct=gp?Math.min(100,Math.round(m.stars/gp.stars*100)):100;
-    const c=el('div','smc',`border-color:${m.color}44;`);
-    c.innerHTML=`<div style="font-size:24px;margin-bottom:3px;">${m.icon}</div>
-      <div style="font-size:12px;font-weight:800;">${m.name}</div>
-      <div style="font-size:18px;font-weight:900;color:${m.color};margin-top:2px;">⭐ ${m.stars}</div>
-      <div style="height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin-top:6px;">
-        <div style="width:${pct}%;height:100%;border-radius:3px;background:${m.color};transition:width .5s;"></div></div>`;
+    const c=el('div','smc','border-color:'+m.color+'44;');
+    c.innerHTML='<div style="font-size:24px;margin-bottom:3px;">'+m.icon+'</div>'
+      +'<div style="font-size:12px;font-weight:800;">'+m.name+'</div>'
+      +'<div style="font-size:18px;font-weight:900;color:'+m.color+';margin-top:2px;">\u2B50 '+m.stars+'</div>'
+      +'<div style="height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin-top:6px;">'
+      +'<div style="width:'+pct+'%;height:100%;border-radius:3px;background:'+m.color+';transition:width .5s;"></div></div>';
     sg.appendChild(c);
   });
   body.appendChild(sg);
-  members.forEach(m=>{
+  sortedMembers().filter(function(m){return m.role!=='caregiver';}).forEach(m=>{
     const mp=prizes.filter(p=>p.member===m.id);if(!mp.length)return;
-    const lb=el('div','slbl');lb.innerHTML=`${m.icon} ${m.name}'s Prizes`;body.appendChild(lb);
+    const lb=el('div','slbl');lb.innerHTML=m.icon+' '+m.name+"'s Prizes";body.appendChild(lb);
     mp.forEach(p=>{
       const pct=Math.min(100,Math.round(m.stars/p.stars*100));const can=m.stars>=p.stars;
-      const c=el('div','pzc',`border-color:${can?m.color:'var(--bd)'};`);
-      c.innerHTML=`<div style="font-size:30px;">${p.icon}</div>
-        <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${p.name}</div>
-        <div style="font-size:10px;color:var(--tx3);">For ${m.name}</div>
-        <div style="height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin-top:5px;"><div style="width:${pct}%;height:100%;border-radius:3px;background:${m.color};transition:width .5s;"></div></div>
-        ${can?'<span class="rdmb">✓ Ready to redeem!</span>':`<div style="font-size:10px;color:var(--tx3);margin-top:3px;">${m.stars}/${p.stars} ⭐ · ${p.stars-m.stars} to go</div>`}
-        </div><div style="font-size:17px;font-weight:900;color:${m.color};">${p.stars}⭐</div>`;
+      const c=el('div','pzc','border-color:'+(can?m.color:'var(--bd)')+';cursor:pointer;');
+      var progressBar='<div style="height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin-top:5px;"><div style="width:'+pct+'%;height:100%;border-radius:3px;background:'+m.color+';transition:width .5s;"></div></div>';
+      var prizeStatus=can?'<span class="rdmb">&#10003; Ready to redeem! Tap to claim</span>':'<div style="font-size:10px;color:var(--tx3);margin-top:3px;">'+m.stars+'/'+p.stars+' \u2B50 \u00B7 '+(p.stars-m.stars)+' to go</div>';
+      c.innerHTML='<div style="font-size:30px;">'+p.icon+'</div><div style="flex:1;"><div style="font-size:13px;font-weight:800;">'+p.name+'</div><div style="font-size:10px;color:var(--tx3);">For '+m.name+'</div>'+progressBar+prizeStatus+'</div><div style="font-size:17px;font-weight:900;color:'+m.color+';">'+p.stars+'\u2B50</div>';
+      c.onclick=function(){
+        if(can) openEditPrize(p.id,true);
+      };
+      if(can) c.style.cursor='pointer';
+      else c.style.cursor='default';
       body.appendChild(c);
     });
   });
-  const ab=el('button','add-row','margin-top:8px;');ab.innerHTML='＋ Add prize';ab.onclick=openAddPrize;body.appendChild(ab);
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  NOTES
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderNotes(){
   const body=$('notes-body');body.innerHTML='';
   const pinned=notes.filter(n=>n.pinned).sort((a,b)=>b.createdAt-a.createdAt);
@@ -1545,9 +1879,9 @@ function renderNotes(){
     body.innerHTML='<div style="text-align:center;padding:48px 0;color:var(--tx3);font-size:14px;font-weight:700;">No notes yet!<br><span style="font-size:12px;">Tap + New Note to leave a message for the family or nanny.</span></div>';
     return;
   }
-  if(pinned.length){const lb=el('div','slbl');lb.textContent='📌 Pinned';body.appendChild(lb);}
+  if(pinned.length){const lb=el('div','slbl');lb.textContent='\uD83D\uDCCC Pinned';body.appendChild(lb);}
   [...pinned,...unpinned].forEach(note=>body.appendChild(buildNoteCard(note)));
-  const ab=el('button','add-row','margin-top:8px;');ab.innerHTML='＋ New note';ab.onclick=()=>openNoteModal(null);body.appendChild(ab);
+  const ab=el('button','add-row','margin-top:8px;');ab.innerHTML='\uFF0B New note';ab.onclick=()=>openNoteModal(null);body.appendChild(ab);
 }
 function buildNoteCard(note){
   const m=getMC(note.from);
@@ -1557,18 +1891,19 @@ function buildNoteCard(note){
   let clHtml='';
   note.checklist.forEach((item,i)=>{
     clHtml+=`<div class="note-cl-item" data-nid="${note.id}" data-ci="${i}">
-      <div class="note-cl-box${item.done?' on':''}">${item.done?'✓':''}</div>
+      <div class="note-cl-box${item.done?' on':''}">${item.done?'\u2713':''}</div>
       <div class="note-cl-txt${item.done?' done':''}">${item.text}</div>
     </div>`;
   });
   c.innerHTML=`<div class="note-hdr">
-    ${note.pinned?'<span class="note-pin-ico">📌</span>':''}
+    ${note.pinned?'<span class="note-pin-ico">\uD83D\uDCCC</span>':''}
     <div class="note-from-pill" style="background:${m.color};">${m.icon} ${m.name}</div>
     <div class="note-title">${note.title}</div>
+    <div style="font-size:14px;color:var(--tx3);padding:2px 4px;cursor:pointer;margin-left:auto;flex-shrink:0;">\u270F\uFE0F</div>
   </div>
   ${note.body?`<div class="note-body">${note.body}</div>`:''}
   ${clHtml?`<div class="note-cl">${clHtml}</div>`:''}
-  <div class="note-meta"><span class="note-time">🕐 ${ageStr}</span></div>`;
+  <div class="note-meta"><span class="note-time">\uD83D\uDD50 ${ageStr}</span></div>`;
   // Checklist toggle
   c.querySelectorAll('.note-cl-item').forEach(row=>{
     row.onclick=e=>{
@@ -1617,16 +1952,16 @@ function saveNote(){
 }
 function deleteNote(){
   if(!editNoteId)return;
-  appConfirm({icon:'📝',title:'Delete note?',msg:'This note will be permanently deleted.',yesLabel:'Delete',noLabel:'Keep it'},ok=>{
+  appConfirm({icon:'\uD83D\uDCDD',title:'Delete note?',msg:'This note will be permanently deleted.',yesLabel:'Delete',noLabel:'Keep it'},ok=>{
     if(!ok)return;
     notes=notes.filter(n=>n.id!==editNoteId);
     cm('m-note');saveData();renderNotes();
   });
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  PARENT
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function updateCalHours(){
   const s=+$('cal-start-hour').value;
   const e=+$('cal-end-hour').value;
@@ -1634,7 +1969,7 @@ function updateCalHours(){
   calStartHour=s; calEndHour=e;
   saveCalSettings();
   const lbl=$('cal-hours-label');
-  if(lbl) lbl.textContent=`${s===0?'12am':s>12?s-12+'pm':s+'am'} – ${e>12?e-12+'pm':e+'am'} (${e-s} hours)`;
+  if(lbl) lbl.textContent=`${s===0?'12am':s>12?s-12+'pm':s+'am'} \u2013 ${e>12?e-12+'pm':e+'am'} (${e-s} hours)`;
   if($('pg-cal').classList.contains('on')) renderCal();
 }
 function populateCalHourSelects(){
@@ -1649,33 +1984,97 @@ function populateCalHourSelects(){
   $('cal-start-hour').value=calStartHour;
   $('cal-end-hour').value=calEndHour;
   const lbl=$('cal-hours-label');
-  if(lbl) lbl.textContent=`${calStartHour===0?'12am':calStartHour>12?calStartHour-12+'pm':calStartHour+'am'} – ${calEndHour>12?calEndHour-12+'pm':calEndHour+'am'} (${calEndHour-calStartHour} hours)`;
+  if(lbl) lbl.textContent=`${calStartHour===0?'12am':calStartHour>12?calStartHour-12+'pm':calStartHour+'am'} \u2013 ${calEndHour>12?calEndHour-12+'pm':calEndHour+'am'} (${calEndHour-calStartHour} hours)`;
 }
+// \u2500\u2500 Points reset & monthly tally \u2500\u2500
+const RESET_KEY='kinori_reset';
+const TALLY_KEY='kinori_tally';
+function getResetSettings(){try{const s=localStorage.getItem(RESET_KEY);if(s)return JSON.parse(s);}catch(e){}return{freq:'never'};}
+function getMonthlyTally(){try{const s=localStorage.getItem(TALLY_KEY);if(s)return JSON.parse(s);}catch(e){}return{};}
+function saveMonthlyTally(t){try{localStorage.setItem(TALLY_KEY,JSON.stringify(t));}catch(e){}}
+function saveResetSettings(){
+  const freq=$('reset-freq').value;
+  localStorage.setItem(RESET_KEY,JSON.stringify({freq}));
+  updateNextResetLabel();
+}
+function updateNextResetLabel(){
+  const lbl=$('next-reset-lbl');if(!lbl)return;
+  var _rs2=getResetSettings();var freq=_rs2.freq;
+  if(freq==='never'){lbl.textContent='';return;}
+  const now=new Date();
+  let next;
+  if(freq==='weekly'){
+    next=new Date(now);next.setDate(now.getDate()+(7-now.getDay())%7||7);next.setHours(23,59,0,0);
+  } else {
+    next=new Date(now.getFullYear(),now.getMonth()+1,1);
+  }
+  lbl.textContent='Next reset: '+next.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+function populateResetSettings(){
+  const s=$('reset-freq');if(!s)return;
+  s.value=getResetSettings().freq;
+  updateNextResetLabel();
+}
+function checkAutoReset(){
+  var _rs=getResetSettings();var freq=_rs.freq;
+  if(freq==='never')return;
+  const lastKey='kinori_last_reset';
+  const last=localStorage.getItem(lastKey);
+  const now=new Date();
+  const nowStr=now.toISOString().split('T')[0];
+  let shouldReset=false;
+  if(freq==='weekly'&&now.getDay()===0){const week=getWeekStr(now);if(last!==week){shouldReset=true;localStorage.setItem(lastKey,week);}}
+  if(freq==='monthly'&&now.getDate()===1){const mo=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');if(last!==mo){shouldReset=true;localStorage.setItem(lastKey,mo);}}
+  if(shouldReset) doPointsReset();
+}
+function getWeekStr(d){const s=new Date(d);s.setDate(d.getDate()-d.getDay());return s.toISOString().split('T')[0];}
+function doPointsReset(){
+  // Save current stars to tally
+  const tally=getMonthlyTally();
+  const now=new Date();
+  const mo=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  // Use previous month if resetting on 1st
+  const tallMo=now.getDate()===1?
+    (now.getMonth()===0?(now.getFullYear()-1)+'-12':now.getFullYear()+'-'+String(now.getMonth()).padStart(2,'0')):mo;
+  if(!tally[tallMo])tally[tallMo]={};
+  members.forEach(m=>{
+    tally[tallMo][m.id]=(tally[tallMo][m.id]||0)+m.stars;
+    m.stars=0;
+  });
+  saveMonthlyTally(tally);
+  saveData();
+}
+
 function saveFamilyName(){
   const n=$('family-name-input').value.trim();
   if(!n){$('family-name-msg').style.color='var(--rdd)';$('family-name-msg').textContent='Please enter a family name.';return;}
   setFamilyName(n);
   const fn=$('lk-family-name');if(fn)fn.textContent=n;
-  $('family-name-msg').style.color='var(--gnd)';$('family-name-msg').textContent='✓ Updated on lock screen!';
+  $('family-name-msg').style.color='var(--gnd)';$('family-name-msg').textContent='\u2713 Updated on lock screen!';
   setTimeout(()=>$('family-name-msg').textContent='',2500);
 }
 function renderParent(){
   const ml=$('mem-list');ml.innerHTML='';
-  members.forEach(m=>{
+  sortedMembers().forEach(m=>{
     const c=el('div','msc');
     c.innerHTML=`<div style="width:38px;height:38px;border-radius:50%;background:${m.color}22;display:flex;align-items:center;justify-content:center;font-size:20px;">${m.icon}</div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${m.name}</div><div style="font-size:10px;color:var(--tx3);">${m.role==='parent'?'Parent':'Kid'} · ⭐ ${m.stars}</div></div>
-      <div style="font-size:16px;color:var(--tx3);">›</div>`;
+      <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${m.name}</div><div style="font-size:10px;color:var(--tx3);">${m.role==='parent'?'Parent':m.role==='caregiver'?'Caregiver':'Kid'} \u00B7 ${m.role!=='caregiver'?'\u2B50 '+m.stars:''}</div></div>
+      <div style="font-size:16px;color:var(--tx3);">\u203A</div>`;
     c.onclick=()=>openEditMember(m.id);ml.appendChild(c);
   });
   const pl=$('prize-list-p');pl.innerHTML='';
-  prizes.forEach(p=>{
+  prizes.forEach(function(p){
     const m=members.find(x=>x.id===p.member);
-    pl.innerHTML+=`<div style="background:var(--sf);border-radius:11px;border:1.5px solid var(--bd);padding:10px 13px;display:flex;align-items:center;gap:9px;margin-bottom:6px;">
-      <span style="font-size:20px;">${p.icon}</span>
-      <div style="flex:1;"><div style="font-size:12px;font-weight:800;">${p.name}</div><div style="font-size:10px;color:var(--tx3);">For ${m?m.name:'?'} · ${p.stars} ⭐</div></div></div>`;
+    const row=el('div','','background:var(--sf);border-radius:11px;border:1.5px solid var(--bd);padding:10px 13px;display:flex;align-items:center;gap:9px;margin-bottom:6px;cursor:pointer;');
+    row.innerHTML='<span style="font-size:20px;">'+p.icon+'</span>'
+      +'<div style="flex:1;"><div style="font-size:12px;font-weight:800;">'+p.name+'</div>'
+      +'<div style="font-size:10px;color:var(--tx3);">For '+(m?m.name:'?')+' \u00B7 '+p.stars+' \u2B50</div></div>'
+      +'<div style="font-size:16px;color:var(--tx3);">\u270F\uFE0F</div>';
+    row.onclick=function(){openEditPrize(p.id);};
+    pl.appendChild(row);
   });
   populateCalHourSelects();
+  populateResetSettings();
   // Show recovery code and family name
   const rc=$('recovery-code-display');
   if(rc) rc.textContent=getRecoveryCode();
@@ -1683,17 +2082,17 @@ function renderParent(){
   if(fni) fni.value=getFamilyName();
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  STORE MANAGEMENT
-// ════════════════════════════════════════════════════════
-let editStoreId=null, selStoreIcon='🏪', selStoreColor=COLORS[0];
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+let editStoreId=null, selStoreIcon='\u{1F3EA}', selStoreColor=COLORS[0];
 
 function buildStoreIcoLib(){
   const lib=$('store-ico-lib');lib.innerHTML='';
   // Curated store-relevant icons at top, then full library
-  const storeIcons=['🍃','🎯','🛒','🏪','🏬','🏢','📦','💻','🌟','🔵','🟢','🔴','🟡','🟠','🟣','🍕','🥩','🥦','🥛','🧴','👕','💊','🌺','🏋️','📚','🎮','🚗'];
-  const allCats = {...ICONS, '🛍️ Stores & Shopping': storeIcons};
-  Object.entries({...{'🛍️ Stores': storeIcons}, ...ICONS}).forEach(([cat,icons])=>{
+  const storeIcons=['\uD83C\uDF43','\uD83C\uDFAF','\uD83D\uDED2','\uD83C\uDFEA','\uD83C\uDFEC','\uD83C\uDFE2','\uD83D\uDCE6','\uD83D\uDCBB','\uD83C\uDF1F','\uD83D\uDD35','\uD83D\uDFE2','\uD83D\uDD34','\uD83D\uDFE1','\uD83D\uDFE0','\uD83D\uDFE3','\uD83C\uDF55','\uD83E\uDD69','\uD83E\uDD66','\uD83E\uDD5B','\uD83E\uDDF4','\uD83D\uDC55','\uD83D\uDC8A','\uD83C\uDF3A','\uD83C\uDFCB\uFE0F','\uD83D\uDCDA','\uD83C\uDFAE','\uD83D\uDE97'];
+  const allCats = {...ICONS, '\uD83D\uDECD\uFE0F Stores & Shopping': storeIcons};
+  Object.entries({...{'\uD83D\uDECD\uFE0F Stores': storeIcons}, ...ICONS}).forEach(([cat,icons])=>{
     const lb=el('div','ico-cat-lbl');lb.textContent=cat;lib.appendChild(lb);
     const grid=el('div','ico-grid');
     icons.forEach(ico=>{
@@ -1725,10 +2124,10 @@ function buildStoreCpicks(cur){
   });
 }
 function openAddStore(){
-  editStoreId=null; selStoreIcon='🏪'; selStoreColor=COLORS[4];
+  editStoreId=null; selStoreIcon='\u{1F3EA}'; selStoreColor=COLORS[4];
   $('store-modal-title').textContent='Add Store';
   $('si-name').value='';
-  $('si-prev').textContent='🏪'; $('si-prev').style.background=COLORS[4];
+  $('si-prev').textContent='\uD83C\uDFEA'; $('si-prev').style.background=COLORS[4];
   $('store-del-btn').style.display='none';
   buildStoreIcoLib(); buildStoreCpicks(); sm('m-store');
 }
@@ -1753,26 +2152,59 @@ function saveStore(){
 }
 function deleteStore(){
   if(!editStoreId)return;
-  appConfirm({icon:'🛒',title:'Remove this store?',msg:'Items assigned to this store will keep their store name but the tab will disappear from Shopping.',yesLabel:'Remove',noLabel:'Keep'},ok=>{
+  appConfirm({icon:'\uD83D\uDED2',title:'Remove this store?',msg:'Items assigned to this store will keep their store name but the tab will disappear from Shopping.',yesLabel:'Remove',noLabel:'Keep'},ok=>{
     if(!ok)return;
     customStores=customStores.filter(s=>s.id!==editStoreId);
     cm("m-store"); saveStores(); renderShop();
   });
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  PRIZE / CHORE MODALS
-// ════════════════════════════════════════════════════════
-function openAddChore(){popMemberSel('ci-mem');$('ci-name').value='';sm('m-chore');}
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var editChoreId=null;
+function openAddChore(){
+  editChoreId=null;
+  $('chore-modal-title').textContent='Add Contribution';
+  popMemberSel('ci-mem');$('ci-name').value='';
+  $('ci-stars').value='2';$('ci-freq').value='Daily';
+  $('ci-del').style.display='none';
+  sm('m-chore');
+}
+function openEditChore(id){
+  var c=chores.find(function(x){return x.id===id;});if(!c)return;
+  editChoreId=id;
+  $('chore-modal-title').textContent='Edit Contribution';
+  popMemberSel('ci-mem');$('ci-mem').value=c.member;
+  $('ci-name').value=c.name;
+  $('ci-stars').value=c.stars||2;
+  $('ci-freq').value=c.freq||'Daily';
+  $('ci-del').style.display='block';
+  sm('m-chore');
+}
 function saveChore(){
-  const n=$('ci-name').value.trim();if(!n)return;
-  chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:+$('ci-stars').value,freq:$('ci-freq').value,done:false});
+  var n=$('ci-name').value.trim();if(!n)return;
+  if(editChoreId){
+    var c=chores.find(function(x){return x.id===editChoreId;});
+    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=+$('ci-stars').value;c.freq=$('ci-freq').value;}
+  } else {
+    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:+$('ci-stars').value,freq:$('ci-freq').value,done:false});
+  }
   cm('m-chore');saveData();renderChores();
 }
+function deleteChore(){
+  if(!editChoreId)return;
+  var c=chores.find(function(x){return x.id===editChoreId;});
+  appConfirm({icon:'!',title:'Delete "'+( c?c.name:'this contribution')+'"?',msg:'It will be removed permanently.',yesLabel:'Delete',noLabel:'Keep'},function(ok){
+    if(!ok)return;
+    chores=chores.filter(function(x){return x.id!==editChoreId;});
+    cm('m-chore');saveData();renderChores();
+  });
+}
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  ROUTINES
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 let routineDate = new Date();
 function routineDay(d){routineDate=new Date(routineDate.getTime()+d*864e5);renderRoutines();}
 function routineToday(){routineDate=new Date();renderRoutines();}
@@ -1817,7 +2249,7 @@ function isDayComplete(memberId, dateKey){
   return tods.length > 0 && tods.every(tod => isBlockComplete(memberId, tod, dateKey));
 }
 
-// Get week keys Mon–Sun containing routineDate
+// Get week keys Mon\u2013Sun containing routineDate
 function getWeekKeys(){
   const d = new Date(routineDate);
   const day = d.getDay(); // 0=Sun
@@ -1838,25 +2270,25 @@ function renderRoutines(){
   const today = new Date();
   const isToday = routineDate.toDateString()===today.toDateString();
   let lbl = routineDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  if(isToday) lbl = 'Today · '+lbl;
+  if(isToday) lbl = 'Today \u00B7 '+lbl;
   $('routine-date-lbl').textContent = lbl;
 
   const body = $('routine-body'); body.innerHTML = '';
 
   const BLOCKS = [
-    {tod:'Morning',   icon:'🌤️', label:'Morning Rhythm',   color:'#F59E0B'},
-    {tod:'Afternoon', icon:'☀️',  label:'Afternoon Rhythm', color:'#E8956A'},
-    {tod:'Evening',   icon:'🌙',  label:'Evening Rhythm',   color:'#7B5EA7'},
+    {tod:'Morning',   icon:'\uD83C\uDF24\uFE0F', label:'Morning Rhythm',   color:'#F59E0B'},
+    {tod:'Afternoon', icon:'\u2600\uFE0F',  label:'Afternoon Rhythm', color:'#E8956A'},
+    {tod:'Evening',   icon:'\uD83C\uDF19',  label:'Evening Rhythm',   color:'#7B5EA7'},
   ];
 
-  // Get all members who have routines
-  const activeMembers = members.filter(m => routines.some(r=>r.member===m.id));
+  // Get all members who have routines, caregivers last
+  const activeMembers = sortedMembers().filter(m => routines.some(r=>r.member===m.id));
 
   activeMembers.forEach(m => {
     const memberRoutines = routines.filter(r=>r.member===m.id);
     if(!memberRoutines.length) return;
 
-    // ── Weekly tracker strip ──
+    // \u2500\u2500 Weekly tracker strip \u2500\u2500
     const weekSection = el('div','',`margin-bottom:14px;`);
     const weekLabel = el('div','',`font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:7px;display:flex;align-items:center;gap:6px;`);
     weekLabel.innerHTML = `<span style="font-size:16px;">${m.icon}</span> ${m.name}'s Week`;
@@ -1881,20 +2313,20 @@ function renderRoutines(){
         transition:all .3s;
         box-shadow:${complete ? '0 2px 8px '+m.color+'44' : 'none'};
       `);
-      dot.innerHTML = `<span>${dayNames[i]}</span>${complete?'<span style="font-size:8px;">✓</span>':''}`;
+      dot.innerHTML = `<span>${dayNames[i]}</span>${complete?'<span style="font-size:8px;">\u2713</span>':''}`;
       weekStrip.appendChild(dot);
     });
 
     // Weekly bonus indicator
     const bonusDiv = el('div','',`display:flex;align-items:center;gap:5px;`);
     bonusDiv.innerHTML = `<div style="height:6px;flex:1;background:var(--bd);border-radius:3px;overflow:hidden;"><div style="width:${Math.round(completedDays/7*100)}%;height:100%;background:${m.color};border-radius:3px;transition:width .5s;"></div></div>
-      <div style="font-size:11px;font-weight:800;color:${m.color};white-space:nowrap;">${completedDays}/7 ${completedDays===7?'🎉 Bonus +'+ROUTINE_WEEKLY_BONUS+'⭐':'+'+ROUTINE_WEEKLY_BONUS+'⭐ bonus at 7'}</div>`;
+      <div style="font-size:11px;font-weight:800;color:${m.color};white-space:nowrap;">${completedDays}/7 ${completedDays===7?'\uD83C\uDF89 Bonus +'+ROUTINE_WEEKLY_BONUS+'\u2B50':'+'+ROUTINE_WEEKLY_BONUS+'\u2B50 bonus at 7'}</div>`;
 
     weekSection.appendChild(weekStrip);
     weekSection.appendChild(bonusDiv);
     body.appendChild(weekSection);
 
-    // ── Time blocks ──
+    // \u2500\u2500 Time blocks \u2500\u2500
     BLOCKS.forEach(block => {
       const blockItems = memberRoutines.filter(r => r.tod === block.tod);
       if(!blockItems.length) return;
@@ -1911,7 +2343,7 @@ function renderRoutines(){
       const titleDiv = el('div','routine-block-title');
       titleDiv.innerHTML = `<span>${block.icon}</span><span style="color:${block.color};">${block.label}</span>`;
       const badge = el('div','routine-stars-badge'+(blockComplete?' earned':''));
-      badge.textContent = blockComplete ? '⭐ +'+ROUTINE_BLOCK_STARS+' earned!' : doneCount+'/'+total+' done';
+      badge.textContent = blockComplete ? '\u2B50 +'+ROUTINE_BLOCK_STARS+' earned!' : doneCount+'/'+total+' done';
       hdr.appendChild(titleDiv); hdr.appendChild(badge);
       card.appendChild(hdr);
 
@@ -1923,21 +2355,26 @@ function renderRoutines(){
       // Completion banner
       if(blockComplete){
         const banner = el('div','routine-done-banner');
-        banner.innerHTML = `✅ ${block.tod} complete — well done, ${m.name}!`;
+        banner.innerHTML = `\u2705 ${block.tod} complete \u2014 well done, ${m.name}!`;
         card.appendChild(banner);
       }
 
-      // Items
+      // Items \u2014 filter by today's day of week
+      const todayDayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(routineDate).getDay()];
       const sect = el('div','routine-member-sect');
       blockItems.forEach(r => {
+        // Skip if this rhythm isn't active on today's day
+        const activeDays = r.days||['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        if(!activeDays.includes(todayDayName)) return;
         const done = isRoutineDone(r.id, dk);
         const row = el('div','ri');
         row.innerHTML = `
           <div class="ri-chk${done?' done':''}" style="border-color:${m.color};${done?'background:'+m.color+';':''}">
-            ${done?'✓':''}
+            ${done?'\u2713':''}
           </div>
           <div class="ri-name${done?' done':''}">${r.name}</div>
-          ${r.type==='together'?'<div class="ri-together">💛 Together</div>':''}`;
+          ${r.type==='together'?'<div class="ri-together">\uD83D\uDC9B Together</div>':''}
+          <div style="font-size:14px;color:var(--tx3);padding:2px 4px;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();openEditRoutine('${r.id}')">\u270F\uFE0F</div>`;
         row.onclick = () => toggleRoutineItem(r, m, dk, blockItems, block);
         sect.appendChild(row);
       });
@@ -1951,15 +2388,15 @@ function renderRoutines(){
   if(sharedItems.length){
     const sharedCard = el('div','routine-block');
     const sharedHdr = el('div','routine-block-hdr');
-    sharedHdr.innerHTML = `<div class="routine-block-title"><span>👪</span><span>Family Together</span></div>`;
+    sharedHdr.innerHTML = `<div class="routine-block-title"><span>\uD83D\uDC6A</span><span>Family Together</span></div>`;
     sharedCard.appendChild(sharedHdr);
     const sharedSect = el('div','routine-member-sect');
     sharedItems.forEach(r => {
       const done = isRoutineDone(r.id, dk);
       const row = el('div','ri');
-      row.innerHTML = `<div class="ri-chk${done?' done':''}" style="border-color:#94A3B8;${done?'background:#94A3B8;':''}">${done?'✓':''}</div>
+      row.innerHTML = `<div class="ri-chk${done?' done':''}" style="border-color:#94A3B8;${done?'background:#94A3B8;':''}">${done?'\u2713':''}</div>
         <div class="ri-name${done?' done':''}">${r.name}</div>
-        <div class="ri-together">💛 Together</div>`;
+        <div class="ri-together">\uD83D\uDC9B Together</div>`;
       row.onclick = () => {
         const newVal = !isRoutineDone(r.id, dk);
         setRoutineDone(r.id, dk, newVal);
@@ -1973,7 +2410,7 @@ function renderRoutines(){
 
   // Add routine button
   const ab = el('button','add-row','margin-top:8px;');
-  ab.innerHTML = '＋ Add routine item';
+  ab.innerHTML = '\uFF0B Add routine item';
   ab.onclick = openAddRoutine;
   body.appendChild(ab);
 }
@@ -1983,7 +2420,7 @@ function toggleRoutineItem(r, m, dk, blockItems, block){
   setRoutineDone(r.id, dk, !wasDone);
 
   if(!wasDone){
-    // Just completed — check if block is now complete
+    // Just completed \u2014 check if block is now complete
     const nowBlockComplete = blockItems.every(item => isRoutineDone(item.id, dk));
     if(nowBlockComplete){
       // Award block stars
@@ -2016,56 +2453,208 @@ function toggleRoutineItem(r, m, dk, blockItems, block){
 }
 
 // Add/edit routine modal helpers
-let riTodVal = 'Morning';
-let riTypeVal = 'task';
-function setRiTod(val, btn){
-  riTodVal = val; $('ri-tod').value = val;
-  document.querySelectorAll('.routine-tod-btn').forEach(b=>{
-    b.style.background='var(--sf2)'; b.style.color='var(--tx2)'; b.style.borderColor='var(--bd)';
-  });
-  btn.style.background='var(--aml)'; btn.style.color='var(--amd)'; btn.style.borderColor='var(--am)';
+let riTodVal='Morning', riTypeVal='task', editRoutineId=null, riSelMembers=[], riSelDays=['Mon','Tue','Wed','Thu','Fri'];
+
+function setRiTod(val,btn){
+  riTodVal=val; $('ri-tod').value=val;
+  document.querySelectorAll('.routine-tod-btn').forEach(b=>{b.style.background='var(--sf2)';b.style.color='var(--tx2)';b.style.borderColor='var(--bd)';});
+  btn.style.background='var(--aml)';btn.style.color='var(--amd)';btn.style.borderColor='var(--am)';
 }
-function setRiType(val, btn){
-  riTypeVal = val; $('ri-type').value = val;
-  document.querySelectorAll('.routine-type-btn').forEach(b=>{
-    b.style.background='var(--sf2)'; b.style.color='var(--tx2)'; b.style.borderColor='var(--bd)';
+function setRiType(val,btn){
+  riTypeVal=val; $('ri-type').value=val;
+  document.querySelectorAll('.routine-type-btn').forEach(b=>{b.style.background='var(--sf2)';b.style.color='var(--tx2)';b.style.borderColor='var(--bd)';});
+  btn.style.background='var(--aml)';btn.style.color='var(--amd)';btn.style.borderColor='var(--am)';
+}
+function toggleRiDay(btn){
+  const day=btn.dataset.day;
+  const on=btn.classList.toggle('on');
+  btn.style.background=on?'var(--aml)':'var(--sf2)';
+  btn.style.color=on?'var(--amd)':'var(--tx2)';
+  btn.style.borderColor=on?'var(--am)':'var(--bd)';
+  riSelDays=Array.from(document.querySelectorAll('.ri-day-btn.on')).map(b=>b.dataset.day);
+}
+function buildRiMemPicks(selIds){
+  const wrap=$('ri-mem-picks');wrap.innerHTML='';
+  // "Everyone" pill
+  const allOn=selIds.includes('family');
+  const allBtn=el('button','',`padding:7px 11px;border-radius:20px;border:2px solid ${allOn?'var(--am)':'var(--bd)'};background:${allOn?'var(--aml)':'var(--sf2)'};color:${allOn?'var(--amd)':'var(--tx2)'};font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;`);
+  allBtn.textContent='\uD83D\uDC6A Everyone';
+  allBtn.onclick=()=>{
+    riSelMembers=['family'];
+    buildRiMemPicks(['family']);
+  };
+  wrap.appendChild(allBtn);
+  sortedMembers().forEach(m=>{
+    const on=selIds.includes(m.id);
+    const btn=el('button','',`padding:7px 11px;border-radius:20px;border:2px solid ${on?m.color:'var(--bd)'};background:${on?m.color+'22':'var(--sf2)'};color:${on?m.color:'var(--tx2)'};font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;`);
+    btn.textContent=m.icon+' '+m.name;
+    btn.onclick=()=>{
+      if(riSelMembers.includes(m.id)) riSelMembers=riSelMembers.filter(x=>x!==m.id);
+      else { riSelMembers=riSelMembers.filter(x=>x!=='family'); riSelMembers.push(m.id); }
+      buildRiMemPicks(riSelMembers);
+    };
+    wrap.appendChild(btn);
   });
-  btn.style.background='var(--aml)'; btn.style.color='var(--amd)'; btn.style.borderColor='var(--am)';
+}
+function resetRiDayBtns(selDays){
+  document.querySelectorAll('.ri-day-btn').forEach(b=>{
+    const on=selDays.includes(b.dataset.day);
+    b.classList.toggle('on',on);
+    b.style.background=on?'var(--aml)':'var(--sf2)';
+    b.style.color=on?'var(--amd)':'var(--tx2)';
+    b.style.borderColor=on?'var(--am)':'var(--bd)';
+  });
+  riSelDays=[...selDays];
 }
 function openAddRoutine(){
-  riTodVal='Morning'; riTypeVal='task';
-  popMemberSel('ri-mem');
-  $('ri-name').value='';
-  $('ri-tod').value='Morning'; $('ri-type').value='task';
-  // Reset buttons visually
-  document.querySelectorAll('.routine-tod-btn').forEach((b,i)=>{
-    b.style.background=i===0?'var(--aml)':'var(--sf2)';
-    b.style.color=i===0?'var(--amd)':'var(--tx2)';
-    b.style.borderColor=i===0?'var(--am)':'var(--bd)';
+  editRoutineId=null; riTodVal='Morning'; riTypeVal='task';
+  riSelMembers=members.length?[members[0].id]:[];
+  riSelDays=['Mon','Tue','Wed','Thu','Fri'];
+  $('routine-modal-title').textContent='Add Rhythm Item';
+  $('ri-name').value=''; $('ri-tod').value='Morning'; $('ri-type').value='task';
+  $('ri-del').style.display='none';
+  buildRiMemPicks(riSelMembers);
+  resetRiDayBtns(riSelDays);
+  document.querySelectorAll('.routine-tod-btn').forEach((b,i)=>{b.style.background=i===0?'var(--aml)':'var(--sf2)';b.style.color=i===0?'var(--amd)':'var(--tx2)';b.style.borderColor=i===0?'var(--am)':'var(--bd)';});
+  document.querySelectorAll('.routine-type-btn').forEach((b,i)=>{b.style.background=i===0?'var(--aml)':'var(--sf2)';b.style.color=i===0?'var(--amd)':'var(--tx2)';b.style.borderColor=i===0?'var(--am)':'var(--bd)';});
+  sm('m-routine');
+}
+function openEditRoutine(rid){
+  const r=routines.find(x=>x.id===rid);if(!r)return;
+  editRoutineId=rid; riTodVal=r.tod; riTypeVal=r.type||'task';
+  riSelMembers=Array.isArray(r.members)?r.members:(r.member?[r.member]:[]);
+  riSelDays=r.days||['Mon','Tue','Wed','Thu','Fri'];
+  $('routine-modal-title').textContent='Edit Rhythm Item';
+  $('ri-name').value=r.name; $('ri-tod').value=r.tod; $('ri-type').value=r.type||'task';
+  $('ri-del').style.display='block';
+  buildRiMemPicks(riSelMembers);
+  resetRiDayBtns(riSelDays);
+  // Set tod buttons
+  document.querySelectorAll('.routine-tod-btn').forEach(b=>{
+    const on=b.textContent.toLowerCase().includes(r.tod.toLowerCase());
+    b.style.background=on?'var(--aml)':'var(--sf2)';b.style.color=on?'var(--amd)':'var(--tx2)';b.style.borderColor=on?'var(--am)':'var(--bd)';
   });
-  document.querySelectorAll('.routine-type-btn').forEach((b,i)=>{
-    b.style.background=i===0?'var(--aml)':'var(--sf2)';
-    b.style.color=i===0?'var(--amd)':'var(--tx2)';
-    b.style.borderColor=i===0?'var(--am)':'var(--bd)';
+  document.querySelectorAll('.routine-type-btn').forEach(b=>{
+    const on=(r.type==='together'?b.textContent.includes('Together'):b.textContent.includes('Daily'));
+    b.style.background=on?'var(--aml)':'var(--sf2)';b.style.color=on?'var(--amd)':'var(--tx2)';b.style.borderColor=on?'var(--am)':'var(--bd)';
   });
   sm('m-routine');
 }
 function saveRoutine(){
-  const n=$('ri-name').value.trim(); if(!n)return;
-  routines.push({id:'r'+Date.now(), name:n, member:$('ri-mem').value,
-    tod:$('ri-tod').value||riTodVal, type:$('ri-type').value||riTypeVal});
-  cm('m-routine'); saveData(); renderRoutines();
+  const n=$('ri-name').value.trim();if(!n)return;
+  if(!riSelMembers.length){alert('Please select at least one person.');return;}
+  const days=Array.from(document.querySelectorAll('.ri-day-btn.on')).map(b=>b.dataset.day);
+  if(!days.length){alert('Please select at least one day.');return;}
+  if(editRoutineId){
+    const r=routines.find(x=>x.id===editRoutineId);
+    if(r){r.name=n;r.tod=$('ri-tod').value||riTodVal;r.type=$('ri-type').value||riTypeVal;r.members=[...riSelMembers];r.member=riSelMembers[0];r.days=days;}
+  } else {
+    // Create one routine entry per selected member
+    riSelMembers.forEach(mid=>{
+      routines.push({id:'r'+Date.now()+Math.random().toString(36).slice(2),name:n,member:mid,members:[mid],tod:$('ri-tod').value||riTodVal,type:$('ri-type').value||riTypeVal,days:days});
+    });
+  }
+  cm('m-routine');saveData();renderRoutines();
 }
-function openAddPrize(){popMemberSel('pi-mem');$('pi-name').value='';$('pi-icon').value='';$('pi-stars').value='10';sm('m-prize');}
+function deleteRoutine(){
+  if(!editRoutineId)return;
+  appConfirm({icon:'\uD83C\uDF05',title:'Delete this rhythm item?',msg:'It will be removed from all family members\' routines.',yesLabel:'Delete',noLabel:'Keep'},ok=>{
+    if(!ok)return;
+    routines=routines.filter(r=>r.id!==editRoutineId);
+    cm('m-routine');saveData();renderRoutines();
+  });
+}
+let editPrizeId = null;
+function openAddPrize(){
+  editPrizeId=null;
+  selPrizeIcon='\uD83C\uDFC6';
+  popMemberSel('pi-mem');
+  $('prize-modal-title').textContent='Add Prize';
+  $('pi-form-fields').style.display='block';
+  $('pi-redeem-view').style.display='none';
+  $('pi-name').value='';$('pi-icon').value='';$('pi-stars').value='10';
+  $('pi-prev').textContent=selPrizeIcon;
+  $('pi-del').style.display='none';
+  $('pi-redeem').style.display='none';
+  buildPrizeIcoLib();
+  sm('m-prize');
+}
+function openEditPrize(pid,redeemOnly){
+  const p=prizes.find(x=>x.id===pid);if(!p)return;
+  const m=members.find(x=>x.id===p.member);
+  editPrizeId=pid;
+  if(redeemOnly){
+    // Stars page — show redeem view only, hide edit fields
+    $('prize-modal-title').textContent='Redeem Prize';
+    $('pi-form-fields').style.display='none';
+    $('pi-redeem-view').style.display='block';
+    $('pi-redeem-info').innerHTML='<div style="font-size:32px;">'+p.icon+'</div>'
+      +'<div style="font-size:16px;font-weight:900;margin:6px 0 2px;">'+p.name+'</div>'
+      +'<div style="font-size:12px;color:var(--tx3);">'+p.stars+' \u2B50 for '+(m?m.name:'?')+'</div>';
+    $('pi-del').style.display='none';
+    $('pi-redeem').style.display='block';
+  } else {
+    // Settings — show full edit form
+    $('pi-form-fields').style.display='block';
+    $('pi-redeem-view').style.display='none';
+    selPrizeIcon=p.icon||'\uD83C\uDFC6';
+    popMemberSel('pi-mem');
+    $('prize-modal-title').textContent='Edit Prize';
+    $('pi-name').value=p.name;$('pi-icon').value=p.icon;
+    $('pi-prev').textContent=selPrizeIcon;
+    $('pi-stars').value=p.stars;
+    $('pi-mem').value=p.member;
+    $('pi-del').style.display='block';
+    const can=m&&m.stars>=p.stars;
+    $('pi-redeem').style.display=can?'block':'none';
+    buildPrizeIcoLib();
+  }
+  sm('m-prize');
+}
 function savePrize(){
   const n=$('pi-name').value.trim();if(!n)return;
-  prizes.push({id:'p'+Date.now(),name:n,icon:$('pi-icon').value||'🏆',stars:+$('pi-stars').value,member:$('pi-mem').value});
+  if(editPrizeId){
+    const p=prizes.find(x=>x.id===editPrizeId);
+    if(p){p.name=n;p.icon=$('pi-icon').value||selPrizeIcon||'\uD83C\uDFC6';p.stars=+$('pi-stars').value;p.member=$('pi-mem').value;}
+  } else {
+    prizes.push({id:'p'+Date.now(),name:n,icon:$('pi-icon').value||selPrizeIcon||'\uD83C\uDFC6',stars:+$('pi-stars').value,member:$('pi-mem').value});
+  }
   cm('m-prize');saveData();renderStars();renderParent();
 }
+function deletePrize(){
+  if(!editPrizeId)return;
+  appConfirm({icon:'\uD83C\uDFC6',title:'Delete this prize?',msg:'This prize will be removed.',yesLabel:'Delete',noLabel:'Keep'},ok=>{
+    if(!ok)return;
+    prizes=prizes.filter(p=>p.id!==editPrizeId);
+    cm('m-prize');saveData();renderStars();renderParent();
+  });
+}
+function redeemPrize(){
+  if(!editPrizeId)return;
+  const p=prizes.find(x=>x.id===editPrizeId);if(!p)return;
+  const m=members.find(x=>x.id===p.member);if(!m)return;
+  appConfirm({
+    icon:p.icon,
+    title:'Redeem "'+p.name+'"?',
+    msg:m.name+' will lose '+p.stars+' stars. The prize will be removed.',
+    yesLabel:'Redeem!',
+    yesClass:'safe',
+    noLabel:'Not yet'
+  },ok=>{
+    if(!ok)return;
+    m.stars=Math.max(0,m.stars-p.stars);
+    // Remove prize from list
+    prizes=prizes.filter(x=>x.id!==editPrizeId);
+    // Clear goal prize if it was this one
+    members.forEach(mem=>{if(mem.goalPrize===editPrizeId)mem.goalPrize=null;});
+    cm('m-prize');saveData();renderStars();renderHome();
+    showCel(m,p.stars,p.name,true,p);
+  });
+}
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  MEMBER MODAL
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function buildIcoLib(){
   const lib=$('ico-lib');lib.innerHTML='';
   Object.entries(ICONS).forEach(([cat,icons])=>{
@@ -2082,7 +2671,7 @@ function buildIcoLib(){
 }
 function buildCpicks(cur){
   const c=$('cpicks'); c.innerHTML='';
-  // Build a map of color → member name (excluding the member being edited)
+  // Build a map of color \u2192 member name (excluding the member being edited)
   const takenMap={};
   members.forEach(m=>{
     if(m.id!==editMemId) takenMap[m.color.toLowerCase()]=m;
@@ -2103,7 +2692,7 @@ function buildCpicks(cur){
       const conflict=members.find(m=>m.color.toLowerCase()===color.toLowerCase()&&m.id!==editMemId);
       const msg=$('color-conflict-msg');
       if(conflict){
-        msg.textContent='⚠️ '+conflict.name+' already uses this color — pick another to avoid confusion.';
+        msg.textContent='\u26A0\uFE0F '+conflict.name+' already uses this color \u2014 pick another to avoid confusion.';
       } else {
         msg.textContent='';
       }
@@ -2111,7 +2700,7 @@ function buildCpicks(cur){
     wrap.appendChild(b);
     // Show owner's first name below taken swatches
     const nameLbl=el('div','cpick-name');
-    nameLbl.textContent=takenBy?takenBy.name.split(' ')[0]:(isSel?'✓':'');
+    nameLbl.textContent=takenBy?takenBy.name.split(' ')[0]:(isSel?'\u2713':'');
     nameLbl.style.color=takenBy?color:'var(--gnd)';
     wrap.appendChild(nameLbl);
     wrap.onclick=()=>b.onclick();
@@ -2120,13 +2709,13 @@ function buildCpicks(cur){
 }
 
 function openAddMember(){
-  editMemId=null; selIcon='😊';
+  editMemId=null; selIcon='\u{1F60A}';
   // Auto-pick the first color not already in use
   const usedColors=members.map(m=>m.color.toLowerCase());
   selColor=COLORS.find(c=>!usedColors.includes(c.toLowerCase()))||COLORS[0];
   $('mm-title').textContent='Add Family Member';
   $('mm-name').value=''; $('mm-role').value='kid';
-  $('mm-prev').textContent='😊'; $('mm-prev').style.background=selColor+'22';
+  $('mm-prev').textContent='\uD83D\uDE0A'; $('mm-prev').style.background=selColor+'22';
   $('del-btn').style.display='none';
   $('color-conflict-msg').textContent='';
   buildIcoLib(); buildCpicks(); sm('m-member');
@@ -2148,7 +2737,7 @@ function saveMember(){
   const conflict=members.find(m=>m.color.toLowerCase()===selColor.toLowerCase()&&m.id!==editMemId);
   if(conflict){
     appConfirm({
-      icon:'🎨', title:'Color already taken',
+      icon:'\uD83C\uDFA8', title:'Color already taken',
       msg:conflict.name+' already uses this color. They\'ll look the same on the calendar and chore view. Save anyway?',
       yesLabel:'Save anyway', yesClass:'safe', noLabel:'Pick another'
     }, ok=>{ if(ok) _doSaveMember(n); });
@@ -2167,25 +2756,25 @@ function _doSaveMember(n){
 }
 function deleteMember(){
   if(!editMemId)return;
-  appConfirm({icon:'👤',title:'Remove family member?',msg:'Their contributions and history will remain but they\'ll be removed from the family list.',yesLabel:'Remove',noLabel:'Keep'},ok=>{
+  appConfirm({icon:'\uD83D\uDC64',title:'Remove family member?',msg:'Their contributions and history will remain but they\'ll be removed from the family list.',yesLabel:'Remove',noLabel:'Keep'},ok=>{
     if(!ok)return;
     members=members.filter(m=>m.id!==editMemId);
     cm('m-member');saveData();renderParent();renderHome();
   });
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  BONUS STARS
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 let bonusMemberId=null;
 let bonusStarsVal=2;
 function renderBonusGrid(){
   const g=$('bonus-grid');if(!g)return;
   g.innerHTML='';
-  members.forEach(m=>{
+  sortedMembers().filter(function(m){return m.role!=='caregiver';}).forEach(m=>{
     const card=el('div','',`background:var(--sf);border-radius:14px;border:2px solid ${m.color}44;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .18s;box-shadow:var(--sh);`);
     card.innerHTML=`<div style="width:40px;height:40px;border-radius:50%;background:${m.color}22;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${m.icon}</div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${m.name}</div><div style="font-size:11px;color:var(--tx3);">⭐ ${m.stars} stars</div></div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:800;">${m.name}</div><div style="font-size:11px;color:var(--tx3);">\u2B50 ${m.stars} stars</div></div>
       <button style="background:${m.color};color:#fff;border:none;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;" onclick="event.stopPropagation();openBonus('${m.id}')">+ Stars</button>`;
     g.appendChild(card);
   });
@@ -2193,7 +2782,7 @@ function renderBonusGrid(){
 function openBonus(memberId){
   bonusMemberId=memberId;
   const m=members.find(x=>x.id===memberId);if(!m)return;
-  $('bonus-modal-title').textContent='Give '+m.name+' Bonus Stars ✨';
+  $('bonus-modal-title').textContent='Give '+m.name+' Bonus Stars \u2728';
   $('bonus-reason').value='';
   setBonusStars(2);
   sm('m-bonus');
@@ -2217,12 +2806,12 @@ function giveBonus(){
   showCel(m,stars,reason,!!earned,earned||null);
 }
 
-// ════════════════════════════════════════════════════════
-//  CELEBRATION SOUNDS — Hooray! Clapping! Fanfare! Fireworks!
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  CELEBRATION SOUNDS \u2014 Hooray! Clapping! Fanfare! Fireworks!
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 let choreSoundIdx=0;
 
-// Helper — noise burst for clapping/fireworks
+// Helper \u2014 noise burst for clapping/fireworks
 function makeNoise(ctx,startT,dur,vol){
   const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);
   const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1);
@@ -2235,7 +2824,7 @@ function makeNoise(ctx,startT,dur,vol){
 }
 
 const CHORE_SOUNDS=[
-  // 1: HOORAY! — warm "woo!" slide + sparkle chord
+  // 1: HOORAY! \u2014 warm "woo!" slide + sparkle chord
   (ctx)=>{
     // Woo slide
     const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
@@ -2251,7 +2840,7 @@ const CHORE_SOUNDS=[
       o2.start(t);o2.stop(t+.3);
     });
   },
-  // 2: CLAPPING! — rapid noise bursts mimicking applause
+  // 2: CLAPPING! \u2014 rapid noise bursts mimicking applause
   (ctx)=>{
     const clapTimes=[0,.12,.24,.33,.42,.51,.58,.65];
     clapTimes.forEach(t=>{makeNoise(ctx,ctx.currentTime+t,.09,.6);});
@@ -2262,7 +2851,7 @@ const CHORE_SOUNDS=[
     g.gain.linearRampToValueAtTime(0,ctx.currentTime+.7);
     o.start(ctx.currentTime+.1);o.stop(ctx.currentTime+.75);
   },
-  // 3: FANFARE! — triumphant brass-style arpeggio
+  // 3: FANFARE! \u2014 triumphant brass-style arpeggio
   (ctx)=>{
     [[392,.0,'sawtooth',.3],[523,.1,'sawtooth',.3],[659,.2,'sawtooth',.32],[784,.3,'sawtooth',.35],[1047,.42,'sawtooth',.38]].forEach(([f,t,type,vol])=>{
       const o=ctx.createOscillator();const g=ctx.createGain();const flt=ctx.createBiquadFilter();
@@ -2274,7 +2863,7 @@ const CHORE_SOUNDS=[
       o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.36);
     });
   },
-  // 4: FIREWORKS! — whoosh up + boom + sparkle crackle
+  // 4: FIREWORKS! \u2014 whoosh up + boom + sparkle crackle
   (ctx)=>{
     // Whistle up
     const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
@@ -2294,7 +2883,7 @@ const CHORE_SOUNDS=[
       o2.start(t);o2.stop(t+.15);
     });
   },
-  // 5: STARS! — magical upward twinkle cascade
+  // 5: STARS! \u2014 magical upward twinkle cascade
   (ctx)=>{
     const freqs=[523,659,784,880,1047,1319,1568];
     freqs.forEach((f,i)=>{
@@ -2313,7 +2902,7 @@ const CHORE_SOUNDS=[
   },
 ];
 
-// Big reward sound — full triumphant fanfare with drum hit
+// Big reward sound \u2014 full triumphant fanfare with drum hit
 function playRewardSound(){
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -2351,19 +2940,19 @@ function playChoreSound(){
 function showCel(m,stars,choreName,isReward,prize,isWeekly){
   const ce=$('cel-e');
   if(isWeekly){
-    ce.textContent='🌟'; ce.className='cel-e reward-pop';
+    ce.textContent='\uD83C\uDF1F'; ce.className='cel-e reward-pop';
     $('cel-t').textContent='Perfect week, '+m.name+'!';
-    $('cel-s').textContent='All 7 days complete — '+stars+' bonus stars earned!';
+    $('cel-s').textContent='All 7 days complete \u2014 '+stars+' bonus stars earned!';
     $('cel-bg').style.background=`linear-gradient(135deg,${m.color}cc,${m.color})`;
     playRewardSound();
   } else if(isReward&&prize){
     ce.textContent=prize.icon;ce.className='cel-e reward-pop';
-    $('cel-t').textContent='🎉 PRIZE UNLOCKED, '+m.name+'!';
+    $('cel-t').textContent='\uD83C\uDF89 PRIZE UNLOCKED, '+m.name+'!';
     $('cel-s').textContent='You earned "'+prize.name+'"! Amazing!';
     playRewardSound();
   } else {
     ce.textContent=m.icon;ce.className='cel-e star-pop';
-    $('cel-t').textContent='Way to go, '+m.name+'! ⭐';
+    $('cel-t').textContent='Way to go, '+m.name+'! \u2B50';
     $('cel-s').textContent='+'+stars+' star'+(stars>1?'s':'')+' for "'+choreName+'"';
     playChoreSound();
   }
@@ -2397,12 +2986,12 @@ function fireConfetti(intense){
   };draw();
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  PIN
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function openParent(){sm('pin-ov');pinBuf='';upPinDots();}
 function pk(k){
-  if(k==='⌫')pinBuf=pinBuf.slice(0,-1);
+  if(k==='\u232B')pinBuf=pinBuf.slice(0,-1);
   else if(pinBuf.length<4)pinBuf+=k;
   upPinDots();
   if(pinBuf.length===4){
@@ -2414,7 +3003,7 @@ function pk(k){
         // Show recovery hint after failed attempt
         setTimeout(()=>{
           if($('perr').textContent==='Wrong PIN')
-            $('perr').textContent='Wrong PIN — tap ↩ then use recovery code in Settings';
+            $('perr').textContent='Wrong PIN \u2014 tap \u21A9 then use recovery code in Settings';
         },1500);
         pinBuf='';upPinDots();
       }
@@ -2423,20 +3012,181 @@ function pk(k){
 }
 function upPinDots(){for(let i=0;i<4;i++)$('pd'+i).classList.toggle('on',i<pinBuf.length);}
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  ONBOARDING
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+var obMembers=[];
+var obAddingMember=false;
+
+function obStart(){
+  sm('ob');
+  obShowStep(1);
+}
+
+function obShowStep(n){
+  for(var i=1;i<=5;i++){
+    var s=$('ob-'+i);if(s)s.classList.add('hid');
+  }
+  var step=$('ob-'+n);if(step)step.classList.remove('hid');
+}
+
+function obNext(step){
+  if(step===1){
+    var fn=$('ob-fname').value.trim();
+    if(!fn){$('ob-fname').style.borderColor='#F87171';setTimeout(function(){$('ob-fname').style.borderColor='';},1200);return;}
+    setFamilyName(fn);
+    var lk=$('lk-family-name');if(lk)lk.textContent=fn;
+    obShowStep(2);
+  } else if(step===2){
+    if(!obMembers.length)return;
+    obShowStep(3);
+  } else if(step===3){
+    var p1=$('ob-pw1').value;var p2=$('ob-pw2').value;
+    var err=$('ob-pw-err');err.textContent='';
+    if(p1&&p1!==p2){err.textContent='Passwords don\'t match.';return;}
+    if(p1&&p1.length<4){err.textContent='Password must be at least 4 characters.';return;}
+    if(p1) localStorage.setItem(APP_PW_KEY,p1);
+    obShowStep(4);
+  } else if(step===4){
+    var pin1=$('ob-pin1').value;var pin2=$('ob-pin2').value;
+    var perr=$('ob-pin-err');perr.textContent='';
+    if(pin1&&pin1!==pin2){perr.textContent='PINs don\'t match.';return;}
+    if(pin1&&(pin1.length!==4||isNaN(pin1))){perr.textContent='PIN must be exactly 4 digits.';return;}
+    if(pin1){localStorage.setItem(PIN_KEY,pin1);localStorage.setItem(PIN_RECOVERY_KEY,genRecoveryCode());}
+    obShowStep(5);
+  }
+}
+
+function obSkip(step){
+  if(step===3) obShowStep(4);
+  else if(step===4) obShowStep(5);
+}
+
+function obAddMember(){
+  // Show a quick inline add form
+  var existing=$('ob-add-form');
+  if(existing){existing.remove();return;}
+  var form=el('div','',`margin-top:8px;background:var(--sf2);border-radius:12px;padding:12px;border:1.5px solid var(--bd);`);
+  form.id='ob-add-form';
+  var obColors=['#F87E28','#8B5CF6','#0D9488','#EC4899','#3B82F6','#F59E0B','#22C55E','#EF4444'];
+  var selObColor=obColors[obMembers.length%obColors.length];
+  form.innerHTML=
+    '<div class="ff" style="margin-bottom:8px;"><label>Name</label><input id="ob-mem-name" placeholder="e.g. Emma" style="font-size:15px;"></div>'
+    +'<div class="ff" style="margin-bottom:8px;"><label>Role</label><select id="ob-mem-role"><option value="kid">Kid</option><option value="parent">Parent</option><option value="caregiver">Caregiver</option></select></div>'
+    +'<div class="ff" style="margin-bottom:8px;"><label>Colour</label><div id="ob-cpicks" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;"></div></div>'
+    +'<div class="ff" style="margin-bottom:10px;"><label>Icon</label>'
+    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><div id="ob-mem-prev" style="width:36px;height:36px;border-radius:9px;background:var(--sf);border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:20px;">\uD83D\uDE0A</div>'
+    +'<span style="font-size:11px;color:var(--tx3);">Tap below to pick</span></div>'
+    +'<div class="ico-wrap" id="ob-mem-ico-lib" style="max-height:130px;"></div></div>'
+    +'<div style="display:flex;gap:8px;">'
+    +'<button class="mbt can" style="flex:1;" onclick="$(\'ob-add-form\').remove()">Cancel</button>'
+    +'<button class="mbt cfm" style="flex:1;" onclick="obSaveMember()">Add</button></div>';
+  var addBtn=document.querySelector('.ob-add-mem');
+  addBtn.parentNode.insertBefore(form,addBtn);
+
+  // Build colour picker
+  var cpEl=$('ob-cpicks');
+  obColors.forEach(function(col){
+    var b=el('div','','width:30px;height:30px;border-radius:50%;background:'+col+';cursor:pointer;border:3px solid '+(col===selObColor?'var(--tx)':'transparent')+';transition:all .15s;box-sizing:border-box;');
+    b.onclick=function(){
+      selObColor=col;
+      cpEl.querySelectorAll('div').forEach(function(x){x.style.borderColor='transparent';});
+      b.style.borderColor='var(--tx)';
+      $('ob-mem-prev').style.background=col+'33';
+    };
+    cpEl.appendChild(b);
+  });
+  $('ob-mem-prev').style.background=selObColor+'33';
+
+  // Build icon lib
+  var lib=$('ob-mem-ico-lib');
+  var selIco='\uD83D\uDE0A';
+  Object.entries(ICONS).forEach(function(entry){
+    var cat=entry[0],icons=entry[1];
+    var lb=el('div','ico-cat-lbl');lb.textContent=cat;lib.appendChild(lb);
+    var grid=el('div','ico-grid');
+    icons.forEach(function(ico){
+      var btn=el('div','ico-btn');btn.textContent=ico;
+      btn.onclick=function(){
+        selIco=ico;
+        form.dataset.selIco=ico;
+        $('ob-mem-prev').textContent=ico;
+        lib.querySelectorAll('.ico-btn').forEach(function(b){b.classList.remove('sel');});
+        btn.classList.add('sel');
+      };
+      grid.appendChild(btn);
+    });
+    lib.appendChild(grid);
+  });
+  $('ob-mem-name').focus();
+}
+
+function obSaveMember(){
+  var name=$('ob-mem-name').value.trim();
+  if(!name){$('ob-mem-name').style.borderColor='#F87171';setTimeout(function(){$('ob-mem-name').style.borderColor='';},1200);return;}
+  var form=$('ob-add-form');
+  var icon=form&&form.dataset.selIco?form.dataset.selIco:'\uD83D\uDE0A';
+  var role=$('ob-mem-role').value;
+  // Read selected color from color picker
+  var selBtn=$('ob-cpicks')&&$('ob-cpicks').querySelector('div[style*="var(--tx)"]');
+  var obColors=['#F87E28','#8B5CF6','#0D9488','#EC4899','#3B82F6','#F59E0B','#22C55E','#EF4444'];
+  var color=obColors[obMembers.length%obColors.length];
+  if(selBtn){
+    var bg=selBtn.style.background;
+    var m=bg.match(/#[0-9A-Fa-f]{6}/);
+    if(m)color=m[0];
+  }
+  obMembers.push({id:'m'+Date.now(),name:name,icon:icon,color:color,role:role,stars:0,goalPrize:null});
+  if(form)form.remove();
+  obRenderMemberList();
+  var nextBtn=$('ob-2-next');if(nextBtn)nextBtn.disabled=false;
+}
+
+function obRenderMemberList(){
+  var list=$('ob-member-list');if(!list)return;
+  list.innerHTML='';
+  obMembers.forEach(function(m,i){
+    var row=el('div','ob-mem-row');
+    row.innerHTML='<div class="ob-mem-ico" style="background:'+m.color+'22;border:2px solid '+m.color+';">'+m.icon+'</div>'
+      +'<div style="flex:1;"><div class="ob-mem-name">'+m.name+'</div><div class="ob-mem-role">'+m.role+'</div></div>'
+      +'<div class="ob-mem-del" onclick="obRemoveMember('+i+')">\u00D7</div>';
+    list.appendChild(row);
+  });
+  var nextBtn=$('ob-2-next');if(nextBtn)nextBtn.disabled=obMembers.length===0;
+}
+
+function obRemoveMember(i){
+  obMembers.splice(i,1);
+  obRenderMemberList();
+}
+
+function obFinish(){
+  // Save all members
+  obMembers.forEach(function(m){members.push(m);});
+  // Save data
+  saveData();
+  // Mark onboarded
+  localStorage.setItem('kinori_onboarded','1');
+  // Hide onboarding
+  cm('ob');
+  // Navigate home
+  renderHome();
+}
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  LOCK SCREEN
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 const APP_PW_KEY = 'familyhub_pw';
 const DEFAULT_PW = 'family2025';
 
 function getAppPw(){return localStorage.getItem(APP_PW_KEY)||DEFAULT_PW;}
 
-// ── Family name storage ──
+// \u2500\u2500 Family name storage \u2500\u2500
 const FAMILY_NAME_KEY = 'kinori_family_name';
 function getFamilyName(){return localStorage.getItem(FAMILY_NAME_KEY)||'Our Family';}
 function setFamilyName(n){localStorage.setItem(FAMILY_NAME_KEY,n);}
 
-// ── Lock screen scene painter ──
+// \u2500\u2500 Lock screen scene painter \u2500\u2500
 function lkGetScene(){
   const h=new Date().getHours();
   if(h>=5&&h<12) return 'morning';
@@ -2453,13 +3203,13 @@ function lkPaint(){
   const scene=lkGetScene();
 
   function r(x,y,w,h,col,alpha){
-    ctx.globalAlpha=alpha??1;ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.globalAlpha=1;
+    ctx.globalAlpha=(alpha!==undefined?alpha:1);ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.globalAlpha=1;
   }
   function circle(x,y,rad,col,alpha){
-    ctx.globalAlpha=alpha??1;ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    ctx.globalAlpha=(alpha!==undefined?alpha:1);ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
   }
   function ellipse(x,y,rx,ry,col,alpha){
-    ctx.globalAlpha=alpha??1;ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    ctx.globalAlpha=(alpha!==undefined?alpha:1);ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
   }
 
   if(scene==='morning'){
@@ -2496,7 +3246,7 @@ function lkPaint(){
     ellipse(W/2,H*.87,W*.6,H*.04,'#A8D0E8',.08);
 
   } else if(scene==='afternoon'){
-    // Deep sunset sky — terracotta/ember
+    // Deep sunset sky \u2014 terracotta/ember
     r(0,0,W,H,'#140500');
     r(0,H*.3,W,H*.7,'#2D0C00');
     r(0,H*.55,W,H*.45,'#4A1400');
@@ -2539,7 +3289,7 @@ function lkPaint(){
     ellipse(W*.885,H*.765,W*.028,H*.045,'#0A0100');
 
   } else {
-    // Evening — deep indigo night
+    // Evening \u2014 deep indigo night
     r(0,0,W,H,'#050310');
     r(0,0,W,H*.6,'#08051A');
     // Moon
@@ -2554,7 +3304,7 @@ function lkPaint(){
     [[.05,.05],[.55,.1],[.3,.07]].forEach(([sx,sy])=>{
       circle(sx*W,sy*H,1.5,'#fff',.9);
     });
-    // Night horizon glow — warm city
+    // Night horizon glow \u2014 warm city
     ellipse(W/2,H*.82,W*.65,H*.12,'#2D1060',.55);
     ellipse(W/2,H*.85,W*.5,H*.08,'#3D0F60',.4);
     ellipse(W/2,H*.88,W*.35,H*.05,'#F87E28',.12);
@@ -2587,6 +3337,44 @@ function lkPaint(){
   ctx.fillStyle=botGrad;ctx.fillRect(0,H*.65,W,H*.35);
 }
 
+function lockApp(){
+  sessionStorage.removeItem('fh_unlocked');
+  const lock=$('lock');
+  lock.style.transition='';
+  lock.style.opacity='1';
+  lock.style.transform='';
+  lock.classList.remove('gone');
+  lkInit();
+  $('lk-pw').value='';
+  $('lk-err').textContent='';
+}
+function resetAllData(){
+  appConfirm({
+    icon:'!',
+    title:'Reset all data?',
+    msg:'This will permanently delete all family members, chores, routines, events, meals, notes and shopping items. Export first if you want a backup.',
+    yesLabel:'Reset everything',
+    yesClass:'danger',
+    noLabel:'Cancel'
+  },function(ok){
+    if(!ok)return;
+    // Clear all app data from localStorage
+    localStorage.removeItem('familyhub_v5');
+    localStorage.removeItem('kinori_onboarded');
+    localStorage.removeItem('kinori_nbt');
+    localStorage.removeItem('kinori_pin');
+    localStorage.removeItem('kinori_pin_recovery');
+    localStorage.removeItem('kinori_tally');
+    localStorage.removeItem('kinori_last_reset');
+    localStorage.removeItem('fh_stores');
+    localStorage.removeItem('fh_cal_settings');
+    localStorage.removeItem(FAMILY_NAME_KEY);
+    // Keep app password so they can still get in
+    // Reload to fresh state
+    sessionStorage.removeItem('fh_unlocked');
+    window.location.reload();
+  });
+}
 function lkInit(){
   // Set family name
   const fn=$('lk-family-name');
@@ -2604,6 +3392,7 @@ function lkInit(){
   // Check if already unlocked this session
   if(sessionStorage.getItem('fh_unlocked')==='1'){
     $('lock').classList.add('gone');
+    checkAutoReset();
     renderHome();
   }
 }
@@ -2613,10 +3402,18 @@ function lkSubmit(){
   if(!pw){$('lk-err').textContent='Please enter the password.';return;}
   if(pw===getAppPw()){
     sessionStorage.setItem('fh_unlocked','1');
+    checkAutoReset();
     const lock=$('lock');
     lock.style.transition='opacity .4s ease, transform .4s ease';
     lock.style.opacity='0';lock.style.transform='scale(1.04)';
-    setTimeout(()=>{lock.classList.add('gone');renderHome();},400);
+    setTimeout(function(){
+      lock.classList.add('gone');
+      if(!localStorage.getItem('familyhub_v5')&&!localStorage.getItem('kinori_onboarded')){
+        obStart();
+      } else {
+        renderHome();
+      }
+    },400);
   } else {
     $('lk-err').textContent='Incorrect password. Please try again.';
     $('lk-pw').value='';$('lk-pw').focus();
@@ -2627,8 +3424,8 @@ function lkSubmit(){
 
 function lkToggleEye(){
   const inp=$('lk-pw');const eye=$('lk-eye');
-  if(inp.type==='password'){inp.type='text';eye.textContent='🙈';}
-  else{inp.type='password';eye.textContent='👁️';}
+  if(inp.type==='password'){inp.type='text';eye.textContent='\uD83D\uDE48';}
+  else{inp.type='password';eye.textContent='\uD83D\uDC41\uFE0F';}
 }
 
 function changePin(){
@@ -2642,11 +3439,11 @@ function changePin(){
   if(np!==cp){msg.style.color='var(--rdd)';msg.textContent='New PINs do not match.';return;}
   savePin(np);
   $('pin-current').value='';$('pin-new').value='';$('pin-confirm').value='';
-  msg.style.color='var(--gnd)';msg.textContent='✓ PIN updated!';
+  msg.style.color='var(--gnd)';msg.textContent='\u2713 PIN updated!';
   setTimeout(()=>msg.textContent='',3000);
 }
 function regenerateRecovery(){
-  appConfirm({icon:'🆘',title:'Generate new recovery code?',msg:'Your current recovery code will stop working immediately.',yesLabel:'Generate',noLabel:'Cancel'},ok=>{
+  appConfirm({icon:'\uD83C\uDD98',title:'Generate new recovery code?',msg:'Your current recovery code will stop working immediately.',yesLabel:'Generate',noLabel:'Cancel'},ok=>{
     if(!ok)return;
     const c=genRecoveryCode();localStorage.setItem(PIN_RECOVERY_KEY,c);
     const rc=$('recovery-code-display');if(rc)rc.textContent=c;
@@ -2659,9 +3456,9 @@ function submitRecovery(){
   const entered=$('recovery-input').value.trim().toUpperCase();
   if(entered===getRecoveryCode()){
     cm('pin-recovery-ov');navTo('parent');
-    setTimeout(()=>{const m=$('pin-change-msg');if(m){m.style.color='var(--bld)';m.textContent='Recovery successful — please set a new PIN now.';}},400);
+    setTimeout(()=>{const m=$('pin-change-msg');if(m){m.style.color='var(--bld)';m.textContent='Recovery successful \u2014 please set a new PIN now.';}},400);
   } else {
-    $('recovery-err').textContent='Code not recognised. Find it in Settings → Recovery Code.';
+    $('recovery-err').textContent='Code not recognised. Find it in Settings \u2192 Recovery Code.';
   }
 }
 
@@ -2674,14 +3471,21 @@ function changeAppPassword(){
   if(np!==cp){msg.style.color='var(--rdd)';msg.textContent='Passwords do not match.';return;}
   localStorage.setItem(APP_PW_KEY,np);
   $('new-pw-input').value='';$('new-pw-confirm').value='';
-  msg.style.color='var(--gnd)';msg.textContent='✓ Password updated! Share the new one with your family.';
+  msg.style.color='var(--gnd)';msg.textContent='\u2713 Password updated! Share the new one with your family.';
   setTimeout(()=>msg.textContent='',3000);
 }
 
-// ════════════════════════════════════════════════════════
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  INIT
-// ════════════════════════════════════════════════════════
-lkInit();
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// First visit: skip lock screen, go straight to onboarding
+if(!localStorage.getItem('familyhub_v5')&&!localStorage.getItem('kinori_onboarded')){
+  $('lock').classList.add('gone');
+  obStart();
+} else {
+  lkInit();
+}
+
 </script>
 </body>
 </html>
