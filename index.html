@@ -196,6 +196,9 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
 .fin-bucket-save{background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(22,163,74,.03));}
 .fin-bucket-share{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(124,58,237,.03));}
 .pending-card{background:var(--aml);border:1.5px solid var(--am);border-radius:12px;padding:12px;margin-bottom:10px;}
+.st-card{background:var(--sf);border-radius:14px;border:1.5px solid var(--bd);padding:14px;margin-bottom:10px;box-shadow:var(--sh);}
+.st-bar-wrap{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;margin:8px 0;}
+.st-bar-fill{height:100%;border-radius:4px;transition:width .5s;}
 .mbt.del{background:var(--rdl);color:var(--rdd);}
 
 /* ── ICON LIBRARY ── */
@@ -386,6 +389,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
       <div class="hsec-t">✨ Give Bonus Stars</div>
       <div id="bonus-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;"></div>
     </div>
+    <div class="hsec" id="st-home-sec" style="display:none;">
+      <div class="hsec-t">⏱️ Screen Time</div>
+      <div id="st-home-grid"></div>
+    </div>
   </div>
 </div>
 
@@ -450,6 +457,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <div class="phdr">
     <h1>Shopping List 🛒</h1>
     <div style="display:flex;gap:5px;">
+      <button class="hb" onclick="shareShoppingList()">📤 Share</button>
       <button class="hb" onclick="openAddStore()">+ Store</button>
       <button class="hb pri" onclick="openAddGrocery()">+ Add Item</button>
     </div>
@@ -623,6 +631,36 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <div class="mhnd"></div><h2>🔔 Pending Approvals</h2>
   <div id="approvals-list" style="max-height:60vh;overflow-y:auto;"></div>
   <div style="margin-top:12px;"><button class="mbt can" style="width:100%;" onclick="cm('m-approvals')">Close</button></div>
+</div></div>
+
+<!-- SCREEN TIME: USE TIME MODAL -->
+<div class="ov hid ctr" id="m-st-use"><div class="modal">
+  <div class="mhnd"></div>
+  <h2 id="st-use-title">Use Screen Time</h2>
+  <div id="st-use-balance" style="text-align:center;font-size:14px;color:var(--tx2);margin-bottom:14px;"></div>
+  <div class="ff"><label>Minutes used</label><input id="st-use-mins" type="number" min="1" max="480" value="30" placeholder="e.g. 30"></div>
+  <div class="mbts"><button class="mbt can" onclick="cm('m-st-use')">Cancel</button><button class="mbt cfm" onclick="confirmUseTime()">Deduct Time</button></div>
+</div></div>
+
+<!-- SCREEN TIME: BUY TIME MODAL -->
+<div class="ov hid ctr" id="m-st-buy"><div class="modal">
+  <div class="mhnd"></div>
+  <h2 id="st-buy-title">Buy Screen Time</h2>
+  <div id="st-buy-info" style="text-align:center;font-size:13px;color:var(--tx2);margin-bottom:14px;line-height:1.6;"></div>
+  <div class="ff"><label>Stars to spend ⭐</label><input id="st-buy-stars" type="number" min="1" value="1" placeholder="e.g. 5"></div>
+  <div id="st-buy-preview" style="text-align:center;font-size:13px;font-weight:800;color:var(--am);margin-top:8px;min-height:20px;"></div>
+  <div class="mbts"><button class="mbt can" onclick="cm('m-st-buy')">Cancel</button><button class="mbt cfm" onclick="confirmBuyTime()">Buy Time</button></div>
+</div></div>
+
+<!-- SHARE SHOPPING LIST MODAL -->
+<div class="ov hid ctr" id="m-share-shop"><div class="modal">
+  <div class="mhnd"></div>
+  <h2>Share Shopping List</h2>
+  <div style="font-size:13px;color:var(--tx2);margin-bottom:14px;line-height:1.5;">Choose how you'd like to share your list.</div>
+  <div id="share-shop-preview" style="background:var(--sf2);border-radius:10px;padding:12px;font-size:12px;line-height:1.8;max-height:200px;overflow-y:auto;white-space:pre-wrap;font-family:monospace;margin-bottom:14px;border:1px solid var(--bd);"></div>
+  <button onclick="copyShoppingList()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--am);color:#fff;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;margin-bottom:8px;">📋 Copy to Clipboard</button>
+  <button onclick="mailShoppingList()" style="width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--bd);background:var(--sf2);color:var(--tx2);font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;margin-bottom:8px;">✉️ Open in Mail</button>
+  <button onclick="cm('m-share-shop')" style="width:100%;padding:11px;border-radius:12px;border:none;background:transparent;color:var(--tx3);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Close</button>
 </div></div>
 
 </div><!-- .main -->
@@ -948,6 +986,20 @@ Start dinner by 5pm"></textarea></div>
       <div id="mm-split-err" style="font-size:11px;color:var(--rdd);font-weight:700;margin-top:4px;min-height:14px;"></div>
     </div>
   </div>
+  <!-- Screen Time fields (kids only) -->
+  <div class="ff" id="mm-st-wrap" style="display:none;background:var(--sf2);border-radius:12px;padding:12px;border:1.5px solid var(--bd);margin-top:6px;">
+    <div style="font-size:12px;font-weight:900;color:var(--tx);margin-bottom:8px;">⏱️ Screen Time</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <label style="font-size:12px;font-weight:700;flex:1;">Enable screen time tracking</label>
+      <input type="checkbox" id="mm-st-on" style="width:18px;height:18px;cursor:pointer;" onchange="toggleStFields()">
+    </div>
+    <div id="mm-st-fields" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><label style="font-size:11px;font-weight:700;">Daily allowance (mins)</label><input id="mm-st-daily" type="number" min="5" max="480" value="60" style="width:100%;margin-top:3px;"></div>
+        <div><label style="font-size:11px;font-weight:700;">Mins per ⭐</label><input id="mm-st-rate" type="number" min="1" max="60" value="2" style="width:100%;margin-top:3px;"></div>
+      </div>
+    </div>
+  </div>
   <div class="ff">
     <label>Choose an icon</label>
     <div class="ico-prev-row">
@@ -1166,14 +1218,32 @@ const DONE_HOURS  = 24;
 //  DEFAULT DATA
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 const DEFAULT = {
-  members:[],
-  chores:[],
-  routines:[],
-  prizes:[],
-  events:[],
-  meals:[],
-  groceries:[],
-  notes:[],
+  members:[
+    {id:'m001',name:'Mum',icon:'\uD83D\uDC69',color:'#F87E28',role:'parent',stars:0,goalPrize:null},
+    {id:'m002',name:'Dad',icon:'\uD83D\uDC68',color:'#3B82F6',role:'parent',stars:0,goalPrize:null},
+    {id:'m003',name:'Emma',icon:'\uD83D\uDC67',color:'#A855F7',role:'kid',stars:8,goalPrize:'p001',financialEnabled:false,starValue:0.25,splitSpend:60,splitSave:30,splitShare:10,starsSpend:0,starsSave:0,starsShare:0,pendingMoves:[],payoutTotal:0,stEnabled:true,stDaily:60,stRate:2},
+    {id:'m004',name:'Liam',icon:'\uD83D\uDC66',color:'#10B981',role:'kid',stars:5,goalPrize:'p002',financialEnabled:false,starValue:0.25,splitSpend:60,splitSave:30,splitShare:10,starsSpend:0,starsSave:0,starsShare:0,pendingMoves:[],payoutTotal:0,stEnabled:true,stDaily:45,stRate:2},
+  ],
+  chores:[
+    {id:'c001',name:'Make bed',member:'m003',stars:1,freq:'Daily',done:false},
+    {id:'c002',name:'Pack school bag',member:'m003',stars:1,freq:'Daily',done:false},
+    {id:'c003',name:'Make bed',member:'m004',stars:1,freq:'Daily',done:false},
+    {id:'c004',name:'Feed the dog',member:'m004',stars:2,freq:'Daily',done:false},
+    {id:'c005',name:'Empty dishwasher',member:'m001',stars:1,freq:'Daily',done:false},
+    {id:'c006',name:'Take bins out',member:'m002',stars:2,freq:'Weekly',done:false},
+  ],
+  routines:[
+    {id:'r001',name:'Brush teeth',member:'m003',tod:'Morning',type:'task',days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']},
+    {id:'r002',name:'Get dressed',member:'m003',tod:'Morning',type:'task',days:['Mon','Tue','Wed','Thu','Fri']},
+    {id:'r003',name:'Brush teeth',member:'m004',tod:'Morning',type:'task',days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']},
+    {id:'r004',name:'Read for 20 mins',member:'m003',tod:'Evening',type:'task',days:['Mon','Tue','Wed','Thu','Fri']},
+    {id:'r005',name:'Pyjamas on',member:'m004',tod:'Evening',type:'task',days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']},
+  ],
+  prizes:[
+    {id:'p001',name:'Movie night pick',icon:'\uD83C\uDFAC',stars:20,member:'m003'},
+    {id:'p002',name:'Choose Friday dinner',icon:'\uD83C\uDF55',stars:15,member:'m004'},
+  ],
+  events:[],meals:[],groceries:[],notes:[],
 };
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1542,6 +1612,8 @@ function renderHome(){
     });
   }
   renderBonusGrid();
+  renderScreenTime();
+  renderPendingApprovals();
 }
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderChores(){
@@ -2990,6 +3062,9 @@ function openAddMember(){
   $('mm-star-val').value='0.25';
   $('mm-split-spend').value='60';$('mm-split-save').value='30';$('mm-split-share').value='10';
   $('mm-fin-fields').style.display='none';
+  $('mm-st-on').checked=false;
+  $('mm-st-daily').value='60';$('mm-st-rate').value='2';
+  $('mm-st-fields').style.display='none';
   toggleFinWrap();
   buildIcoLib(); buildCpicks(); sm('m-member');
 }
@@ -3009,16 +3084,25 @@ function openEditMember(id){
   $('mm-split-save').value=m.splitSave!=null?m.splitSave:30;
   $('mm-split-share').value=m.splitShare!=null?m.splitShare:10;
   $('mm-fin-fields').style.display=m.financialEnabled?'block':'none';
+  $('mm-st-on').checked=!!m.stEnabled;
+  $('mm-st-daily').value=m.stDaily||60;
+  $('mm-st-rate').value=m.stRate||2;
+  $('mm-st-fields').style.display=m.stEnabled?'block':'none';
   toggleFinWrap();
   buildIcoLib(); buildCpicks(m.color); sm('m-member');
 }
 
 function toggleFinWrap(){
   var role=$('mm-role').value;
-  $('mm-fin-wrap').style.display=(role==='kid')?'block':'none';
+  var isKid=(role==='kid');
+  $('mm-fin-wrap').style.display=isKid?'block':'none';
+  $('mm-st-wrap').style.display=isKid?'block':'none';
 }
 function toggleFinFields(){
   $('mm-fin-fields').style.display=$('mm-fin-on').checked?'block':'none';
+}
+function toggleStFields(){
+  $('mm-st-fields').style.display=$('mm-st-on').checked?'block':'none';
 }
 function syncSplit(){
   var sp=parseInt($('mm-split-spend').value)||0;
@@ -3053,6 +3137,9 @@ function _doSaveMember(n){
         if(!m.starsShare)m.starsShare=0;
         if(!m.pendingMoves)m.pendingMoves=[];
         if(!m.payoutTotal)m.payoutTotal=0;
+        m.stEnabled=$('mm-st-on').checked;
+        m.stDaily=Math.max(5,parseInt($('mm-st-daily').value)||60);
+        m.stRate=Math.max(1,parseInt($('mm-st-rate').value)||2);
       }
     }
   } else {
@@ -3063,6 +3150,9 @@ function _doSaveMember(n){
       newM.splitSpend=sp;newM.splitSave=sv;newM.splitShare=sh;
       newM.starsSpend=0;newM.starsSave=0;newM.starsShare=0;
       newM.pendingMoves=[];newM.payoutTotal=0;
+      newM.stEnabled=$('mm-st-on').checked;
+      newM.stDaily=Math.max(5,parseInt($('mm-st-daily').value)||60);
+      newM.stRate=Math.max(1,parseInt($('mm-st-rate').value)||2);
     }
     members.push(newM);
   }
@@ -3361,6 +3451,128 @@ function renderTutorial(){
     +stepsHtml+navBtn;
 }
 function renderTutorialPage(){renderTutorial();}
+
+// ══════════════════════════════════════════════════════════
+//  SCREEN TIME
+// ══════════════════════════════════════════════════════════
+function stTodayKey(){var d=new Date();return 'st_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
+function stGetUsed(memberId){return parseInt(localStorage.getItem(stTodayKey()+'_'+memberId)||'0');}
+function stSetUsed(memberId,mins){localStorage.setItem(stTodayKey()+'_'+memberId,mins);}
+function stGetBonus(memberId){return parseInt(localStorage.getItem(stTodayKey()+'_bonus_'+memberId)||'0');}
+function stAddBonus(memberId,mins){var cur=stGetBonus(memberId);localStorage.setItem(stTodayKey()+'_bonus_'+memberId,cur+mins);}
+function stRemaining(m){return Math.max(0,(m.stDaily||60)+stGetBonus(m.id)-stGetUsed(m.id));}
+
+function renderScreenTime(){
+  var sec=$('st-home-sec'),grid=$('st-home-grid');
+  if(!sec||!grid)return;
+  var stKids=members.filter(function(m){return m.stEnabled&&m.role==='kid';});
+  if(!stKids.length){sec.style.display='none';return;}
+  sec.style.display='block';grid.innerHTML='';
+  stKids.forEach(function(m){
+    var remaining=stRemaining(m);
+    var total=(m.stDaily||60)+stGetBonus(m.id);
+    var pct=total>0?Math.round(remaining/total*100):0;
+    var barColor=pct>50?'#10B981':pct>20?'#F87E28':'#EF4444';
+    var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
+    var card=document.createElement('div');card.className='st-card';
+    card.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'
+      +'<div style="width:38px;height:38px;border-radius:50%;background:'+m.color+'22;display:flex;align-items:center;justify-content:center;font-size:20px;">'+m.icon+'</div>'
+      +'<div style="flex:1;"><div style="font-size:13px;font-weight:900;">'+m.name+'</div>'
+      +'<div style="font-size:11px;color:var(--tx3);">Daily: '+(m.stDaily||60)+' mins'+(stGetBonus(m.id)?' + '+stGetBonus(m.id)+' bonus':'')+'</div></div>'
+      +'<div style="font-size:22px;font-weight:900;color:'+barColor+';">'+remaining+'<span style="font-size:11px;font-weight:700;color:var(--tx3);"> min</span></div></div>'
+      +'<div class="st-bar-wrap"><div class="st-bar-fill" style="width:'+pct+'%;background:'+barColor+';"></div></div>'
+      +'<div style="display:flex;gap:8px;margin-top:8px;">'
+      +'<button onclick="openUseTime(\''+m.id+'\')" style="flex:1;padding:8px;border-radius:9px;border:1.5px solid var(--bd);background:var(--sf2);color:var(--tx2);font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">\u2212 Use Time</button>'
+      +(availStars>0?'<button onclick="openBuyTime(\''+m.id+'\')" style="flex:1;padding:8px;border-radius:9px;border:none;background:var(--am);color:#fff;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;">\u2B50 Buy Time</button>':'')
+      +'</div>';
+    grid.appendChild(card);
+  });
+}
+
+var stUseMemberId=null;
+function openUseTime(memberId){
+  var m=members.find(function(x){return x.id===memberId;});if(!m)return;
+  stUseMemberId=memberId;
+  $('st-use-title').textContent=m.icon+' '+m.name+' \u2014 Use Screen Time';
+  $('st-use-balance').textContent='Time remaining today: '+stRemaining(m)+' min';
+  $('st-use-mins').value='30';
+  sm('m-st-use');
+}
+function confirmUseTime(){
+  var m=members.find(function(x){return x.id===stUseMemberId;});if(!m)return;
+  var mins=Math.max(1,parseInt($('st-use-mins').value)||0);
+  stSetUsed(m.id,stGetUsed(m.id)+mins);
+  cm('m-st-use');renderScreenTime();
+}
+
+var stBuyMemberId=null;
+function openBuyTime(memberId){
+  var m=members.find(function(x){return x.id===memberId;});if(!m)return;
+  stBuyMemberId=memberId;
+  var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
+  var rate=m.stRate||2;
+  $('st-buy-title').textContent=m.icon+' '+m.name+' \u2014 Buy Screen Time';
+  $('st-buy-info').textContent='You have \u2B50'+availStars+' stars. Each star = '+rate+' minutes of screen time.';
+  $('st-buy-stars').value='1';
+  $('st-buy-preview').textContent='1 star = '+rate+' mins';
+  $('st-buy-stars').oninput=function(){
+    var n=parseInt(this.value)||0;
+    $('st-buy-preview').textContent=n+' star'+(n===1?'':'s')+' = '+(n*rate)+' mins';
+  };
+  sm('m-st-buy');
+}
+function confirmBuyTime(){
+  var m=members.find(function(x){return x.id===stBuyMemberId;});if(!m)return;
+  var stars=Math.max(1,parseInt($('st-buy-stars').value)||1);
+  var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
+  if(stars>availStars){alert('Not enough stars! You only have \u2B50'+availStars+'.');return;}
+  var rate=m.stRate||2;
+  if(m.financialEnabled){m.starsSpend=Math.max(0,(m.starsSpend||0)-stars);}
+  else{m.stars=Math.max(0,m.stars-stars);}
+  stAddBonus(m.id,stars*rate);
+  saveData();cm('m-st-buy');renderScreenTime();renderHome();
+}
+
+// ══════════════════════════════════════════════════════════
+//  SHOPPING LIST SHARE
+// ══════════════════════════════════════════════════════════
+function buildShoppingText(){
+  var lines=['Kinori Shopping List',''];
+  var stores=[...new Set(groceries.map(function(g){return g.store||'General';}))];
+  if(!stores.length){lines.push('No items on the list yet.');return lines.join('\n');}
+  stores.forEach(function(store){
+    var items=groceries.filter(function(g){return (g.store||'General')===store&&!g.done;});
+    if(!items.length)return;
+    var storeObj=storeList.find(function(s){return s.name===store;});
+    lines.push((storeObj?storeObj.icon+' ':'\uD83D\uDED2 ')+store);
+    items.forEach(function(g){lines.push('  \u25A1 '+g.name+(g.qty?' \u00D7'+g.qty:''));});
+    lines.push('');
+  });
+  return lines.join('\n').trim();
+}
+function shareShoppingList(){
+  $('share-shop-preview').textContent=buildShoppingText();
+  sm('m-share-shop');
+}
+function copyShoppingList(){
+  var text=buildShoppingText();
+  var btn=document.querySelector('#m-share-shop button');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent='\u2705 Copied!';
+      setTimeout(function(){btn.textContent='\uD83D\uDCCB Copy to Clipboard';},2000);
+    });
+  } else {
+    var ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    btn.textContent='\u2705 Copied!';setTimeout(function(){btn.textContent='\uD83D\uDCCB Copy to Clipboard';},2000);
+  }
+}
+function mailShoppingList(){
+  var text=buildShoppingText();
+  window.location.href='mailto:?subject='+encodeURIComponent('Shopping List \u2014 Kinori')+'&body='+encodeURIComponent(text);
+}
 
 // ══════════════════════════════════════════════════════════
 //  CELEBRATION SOUNDS \u2014 Hooray! Clapping! Fanfare! Fireworks!
@@ -3903,10 +4115,11 @@ function changeAppPassword(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// First visit: skip lock screen, go straight to onboarding
+// First visit: pre-load default family for testing, skip onboarding
 if(!localStorage.getItem('familyhub_v5')&&!localStorage.getItem('kinori_onboarded')){
-  $('lock').classList.add('gone');
-  obStart();
+  try{localStorage.setItem('kinori_onboarded','1');localStorage.setItem('kinori_family_name','St George Family');saveData();}catch(e){}
+  var lkfn=$('lk-family-name');if(lkfn)lkfn.textContent='St George Family';
+  lkInit();
 } else {
   lkInit();
 }
