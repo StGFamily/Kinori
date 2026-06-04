@@ -3373,13 +3373,15 @@ var TUT_SECTIONS=[
     {title:'Looking Forward To',body:'Countdowns to things your family is excited about. Tap <b>+ Add</b> to create one, pick an icon and set the date. Add as many as you like. Tap any card to edit or remove it. Past events disappear automatically.'},
     {title:'Today\'s Events',body:'Your family\'s calendar for today. Tap <b>See all \u2192</b> to go to the full calendar and add, edit or remove events.'},
     {title:'Star Leaderboard',body:'Stars earned by each family member through their completed contributions. Tap <b>My Part</b> in the menu to manage tasks.'},
-    {title:'Bonus Stars \u2B50',body:'Tap the bonus stars button to award extra stars for anything worth celebrating \u2014 a kind gesture, great effort, or something unexpected.'}
+    {title:'Bonus Stars \u2B50',body:'Tap the bonus stars button to award extra stars for anything worth celebrating \u2014 a kind gesture, great effort, or something unexpected.'},
+    {title:'Screen Time \u23F1\uFE0F',body:'If Screen Time is enabled for a child (set up in Settings), their daily allowance and time remaining appears here. Tap <b>\u2212 Use Time</b> to log time used, or <b>\u2B50 Buy Time</b> to convert stars into extra minutes. The bar turns orange then red as time runs low. Resets automatically each day.'}
   ]},
   {id:'cal',icon:'\uD83D\uDCC5',label:'Calendar',nav:'cal',intro:'See everything your family has on \u2014 all in one place.',steps:[
     {title:'Add an event',body:'Tap any day then tap <b>+ Add Event</b>. Give it a name, time, and assign it to a person or the whole family.'},
     {title:'Switch views',body:'Toggle between Day, Week and Month using the buttons at the top of the calendar.'},
     {title:'Edit or delete',body:'Tap any event to open it, then tap the pencil to make changes or remove it.'},
-    {title:'Colour coding',body:'Each family member has their own colour so you can see at a glance whose event is whose.'}
+    {title:'Colour coding',body:'Each family member has their own colour so you can see at a glance whose event is whose.'},
+    {title:'Recurring events',body:'When adding an event, use the <b>Repeat</b> option to set it as daily, weekly, every weekday, fortnightly, or on custom days of the week. Set a repeat-until date and the app creates all the events for you.'}
   ]},
   {id:'routines',icon:'\uD83C\uDF05',label:'Routines',nav:'routines',intro:'Daily routines that keep the day on track \u2014 morning, afternoon and evening.',steps:[
     {title:'Add a routine item',body:'Tap <b>+ Add</b> and choose which family member it\'s for, what time of day, and which days of the week it applies.'},
@@ -3397,7 +3399,9 @@ var TUT_SECTIONS=[
     {title:'View progress',body:'Each family member\'s star count and progress toward their prize is shown here.'},
     {title:'Set prizes in Settings',body:'Go to Settings to add prizes for each child, set the star goal, and choose an icon.'},
     {title:'Redeeming',body:'When a child has enough stars their prize card becomes tappable. Tap it to redeem.'},
-    {title:'Financial buckets',body:'If Financial Learning is on, stars split into Spend, Save and Share. Prizes come from Spend only.'}
+    {title:'Financial buckets',body:'If Financial Learning is on, stars split into Spend, Save and Share buckets. Prizes come from the Spend bucket only.'},
+    {title:'Move stars',body:'Kids can request to move stars between buckets using the <b>\u2194\uFE0F Move Stars</b> button. A parent approves or declines from the Pending Approvals banner on the Home screen.'},
+    {title:'Share stars',body:'Kids can gift stars from their Share bucket to a sibling using the <b>\uD83E\uDD1D Share Stars</b> button. This also requires parent approval.'}
   ]},
   {id:'meals',icon:'\uD83C\uDF7D\uFE0F',label:'Meals',nav:'meals',intro:'Plan the week so everyone knows what\'s for dinner.',steps:[
     {title:'Add a meal',body:'Tap any cell in the grid to add a meal for that day and mealtime.'},
@@ -3409,7 +3413,8 @@ var TUT_SECTIONS=[
     {title:'Add an item',body:'Tap <b>+ Add Item</b>, type the name, and choose which store it\'s for.'},
     {title:'Switch stores',body:'Tap the store tabs at the top to see items for each shop.'},
     {title:'Check off as you shop',body:'Tap any item to mark it as collected. It stays visible until you clear it.'},
-    {title:'Add a new store',body:'Tap <b>+ Store</b> to add your own store with a custom name, icon and colour.'}
+    {title:'Add a new store',body:'Tap <b>+ Store</b> to add your own store with a custom name, icon and colour.'},
+    {title:'Share the list \uD83D\uDCE4',body:'Tap the <b>\uD83D\uDCE4 Share</b> button to share your shopping list. Choose <b>Copy to Clipboard</b> to paste it into any app (iMessage, WhatsApp, Gmail, Notes), or <b>Open in Mail</b> to send it via your device\'s mail app. Only unchecked items are included.'}
   ]},
   {id:'notes',icon:'\uD83D\uDCDD',label:'Notes',nav:'notes',intro:'Messages for anyone in the household \u2014 family, partner, or nanny.',steps:[
     {title:'Create a note',body:'Tap <b>+ New Note</b>, choose who it\'s for, give it a title and write your message.'},
@@ -3418,9 +3423,11 @@ var TUT_SECTIONS=[
     {title:'Delete when done',body:'Tap the pencil on any note to open it, then tap Delete when it\'s no longer needed.'}
   ]},
   {id:'parent',icon:'\u2699\uFE0F',label:'Settings',nav:null,intro:'The control room for your app \u2014 PIN protected so only parents can make changes.',steps:[
-    {title:'Family members',body:'Add, edit or remove family members. Enable Financial Learning per child in each member\'s settings.'},
-    {title:'Prizes',body:'Add and manage prizes for each child. Set the star goal and choose an icon.'},
-    {title:'Financial Pay Out',body:'When Financial Learning is on, use the Pay Out button to pay your child their saved stars as real money and clear the Save bucket.'},
+    {title:'Family members',body:'Add, edit or remove family members. Set their name, icon, colour and role.'},
+    {title:'Financial Learning',body:'Enable per child in their member settings. Set a dollar value per star and an auto-split ratio across Spend, Save and Share buckets. Stars are split automatically when earned.'},
+    {title:'Screen Time',body:'Enable per child in their member settings. Set a daily allowance in minutes and a star conversion rate (e.g. 2 mins per star). Kids can then buy extra time from the Home screen using stars from their Spend bucket.'},
+    {title:'Financial Pay Out',body:'When Financial Learning is on, use the <b>Pay Out</b> button next to a child\'s Save bucket to mark their savings as paid and clear the bucket.'},
+    {title:'Prizes',body:'Add and manage prizes for each child. Set the star goal and choose an icon. Prizes are redeemed from the Spend bucket if Financial Learning is on.'},
     {title:'Backup',body:'Use <b>Export</b> to save a copy of your data and <b>Import</b> to restore it on a new device.'},
     {title:'Reset',body:'<b>Reset All Data</b> wipes everything and takes you back to the beginning.'}
   ]}
