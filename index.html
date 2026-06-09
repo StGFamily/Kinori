@@ -1057,6 +1057,16 @@ Start dinner by 5pm"></textarea></div>
       </div>
     </div>
   </div>
+  <div class="ff" id="mm-stars-wrap" style="display:none;background:var(--sf2);border-radius:12px;padding:12px;border:1.5px solid var(--bd);margin-top:6px;">
+    <div style="font-size:12px;font-weight:900;margin-bottom:8px;">⭐ Star Balance</div>
+    <div style="font-size:11px;color:var(--tx3);margin-bottom:10px;">Adjust if stars were accidentally given or need correcting.</div>
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;">
+      <input id="mm-stars-val" type="number" min="0" value="0" style="width:100%;" oninput="var v=Math.max(0,parseInt(this.value)||0);this.value=v;$('mm-stars-note').textContent='New balance: \u2B50'+v;">
+      <button type="button" onclick="adjustMemberStars(-1)" style="width:36px;height:36px;border-radius:9px;border:1.5px solid var(--bd);background:var(--sf);font-size:18px;font-weight:900;cursor:pointer;font-family:inherit;color:var(--rd);">−</button>
+      <button type="button" onclick="adjustMemberStars(1)" style="width:36px;height:36px;border-radius:9px;border:none;background:var(--am);font-size:18px;font-weight:900;cursor:pointer;font-family:inherit;color:#fff;">+</button>
+    </div>
+    <div id="mm-stars-note" style="font-size:10px;color:var(--tx3);margin-top:6px;min-height:14px;"></div>
+  </div>
   <div class="ff">
     <label>Choose an icon</label>
     <div class="ico-prev-row">
@@ -3309,6 +3319,7 @@ function openAddMember(){
   $('mm-prev').textContent='\uD83D\uDE0A'; $('mm-prev').style.background=selColor+'22';
   $('del-btn').style.display='none';
   $('color-conflict-msg').textContent='';
+  $('mm-stars-wrap').style.display='none';
   $('mm-fin-on').checked=false;
   $('mm-star-val').value='0.25';
   $('mm-split-spend').value='60';$('mm-split-save').value='30';$('mm-split-share').value='10';
@@ -3335,6 +3346,15 @@ function openEditMember(id){
   $('mm-split-save').value=m.splitSave!=null?m.splitSave:30;
   $('mm-split-share').value=m.splitShare!=null?m.splitShare:10;
   $('mm-fin-fields').style.display=m.financialEnabled?'block':'none';
+  // Star balance — only for non-caregivers
+  if(m.role!=='caregiver'){
+    $('mm-stars-wrap').style.display='block';
+    var currentStars=m.financialEnabled?((m.starsSpend||0)+(m.starsSave||0)+(m.starsShare||0)):m.stars||0;
+    $('mm-stars-val').value=currentStars;
+    $('mm-stars-note').textContent='Current balance: \u2B50'+currentStars;
+  } else {
+    $('mm-stars-wrap').style.display='none';
+  }
   $('mm-st-on').checked=!!m.stEnabled;
   $('mm-st-daily').value=m.stDaily||60;
   $('mm-st-rate').value=m.stRate||2;
@@ -3343,6 +3363,13 @@ function openEditMember(id){
   buildIcoLib(); buildCpicks(m.color); sm('m-member');
 }
 
+function adjustMemberStars(delta){
+  var inp=$('mm-stars-val');
+  var cur=parseInt(inp.value)||0;
+  var next=Math.max(0,cur+delta);
+  inp.value=next;
+  $('mm-stars-note').textContent='Current balance: \u2B50'+next;
+}
 function toggleFinWrap(){
   var role=$('mm-role').value;
   var isKid=(role==='kid');
@@ -3379,6 +3406,19 @@ function _doSaveMember(n){
     var m=members.find(function(x){return x.id===editMemId;});
     if(m){
       m.name=n;m.icon=selIcon;m.color=selColor;m.role=$('mm-role').value;
+      // Apply star balance adjustment if visible
+      if($('mm-stars-wrap').style.display!=='none'){
+        var newBal=Math.max(0,parseInt($('mm-stars-val').value)||0);
+        if(m.financialEnabled){
+          // Distribute adjusted total across buckets proportionally, or just set spend
+          var currentTotal=(m.starsSpend||0)+(m.starsSave||0)+(m.starsShare||0);
+          var diff=newBal-currentTotal;
+          // Apply diff to spend bucket (most natural place)
+          m.starsSpend=Math.max(0,(m.starsSpend||0)+diff);
+        } else {
+          m.stars=newBal;
+        }
+      }
       if($('mm-role').value==='kid'){
         m.financialEnabled=finOn;
         m.starValue=starVal;
@@ -4376,24 +4416,20 @@ function changeAppPassword(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// Only wipe if schema version changes AND there's no existing family data to preserve
-var _storedSchema = localStorage.getItem('kinori_schema_version');
-var _hasData = !!localStorage.getItem('familyhub_v5');
-if(_storedSchema !== DATA_SCHEMA_VERSION){
-  if(_storedSchema !== null && !_hasData){
-    // Old schema, no data — safe to wipe
-    localStorage.clear();
-  }
-  // Always stamp the current version
+// ── STARTUP ──
+// Never wipe existing data. Only show onboarding if no family data exists at all.
+var _hasExistingData = !!localStorage.getItem('familyhub_v5') || !!localStorage.getItem('kinori_onboarded');
+
+// Stamp schema version without clearing anything
+if(!localStorage.getItem('kinori_schema_version')){
   localStorage.setItem('kinori_schema_version', DATA_SCHEMA_VERSION);
 }
 
-// First visit: go straight to onboarding
-if(!localStorage.getItem('familyhub_v5') && !localStorage.getItem('kinori_onboarded')){
+if(_hasExistingData){
+  lkInit();
+} else {
   $('lock').classList.add('gone');
   obStart();
-} else {
-  lkInit();
 }
 
 // Clear field error state as soon as user starts interacting with it
