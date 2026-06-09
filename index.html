@@ -920,7 +920,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <div class="mhnd"></div><h2 id="chore-modal-title">Add Contribution</h2>
   <div class="ff"><label>Contribution name</label><input id="ci-name" placeholder="e.g. Feed the dog"></div>
   <div class="ff"><label>Assign to</label><select id="ci-mem"></select></div>
-  <div class="ff"><label>Stars per completion</label><select id="ci-stars"><option value="1">1 ⭐</option><option value="2" selected="">2 ⭐</option><option value="3">3 ⭐</option><option value="4">4 ⭐</option><option value="5">5 ⭐</option><option value="6">6 ⭐</option><option value="7">7 ⭐</option><option value="8">8 ⭐</option><option value="9">9 ⭐</option><option value="10">10 ⭐</option></select></div>
+  <div class="ff"><label>Stars per completion</label><input id="ci-stars" type="number" min="1" max="99" value="2" style="width:100%;"></div>
   <div class="ff"><label>Frequency</label><select id="ci-freq" onchange="toggleChoreFreqFields()">
     <option value="Daily">Daily</option>
     <option value="Weekly">Once a week</option>
@@ -1700,7 +1700,7 @@ function renderChores(){
       item.innerHTML=checkHtml
         +'<div style="flex:1;">'
         +'<div style="font-size:12px;font-weight:700;'+(isDone?'text-decoration:line-through;':'')+'">'+ c.name+'</div>'
-        +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+freqLabel+' \u00B7 +'+c.stars+'\u2B50 each</div>'
+        +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+freqLabel+(m.role!=='caregiver'?' \u00B7 +'+c.stars+'\u2B50 each':'')+'</div>'
         +'</div>'
         +(parentUnlocked?'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;flex-shrink:0;" data-cid="'+c.id+'">\u270F\uFE0F</div>':'');
       if(parentUnlocked){
@@ -1733,15 +1733,16 @@ function doChore(c,m,item){
       if(!ok)return;
       var newCount=Math.max(0,count-1);
       setChoreCount(c.id,newCount);
-      if(m.financialEnabled){
-        var rev=splitStars(c.stars,m);
-        m.starsSpend=Math.max(0,(m.starsSpend||0)-rev.spend);
-        m.starsSave=Math.max(0,(m.starsSave||0)-rev.save);
-        m.starsShare=Math.max(0,(m.starsShare||0)-rev.share);
-      } else {
-        m.stars=Math.max(0,m.stars-c.stars);
+      if(m.role!=='caregiver'){
+        if(m.financialEnabled){
+          var rev=splitStars(c.stars,m);
+          m.starsSpend=Math.max(0,(m.starsSpend||0)-rev.spend);
+          m.starsSave=Math.max(0,(m.starsSave||0)-rev.save);
+          m.starsShare=Math.max(0,(m.starsShare||0)-rev.share);
+        } else {
+          m.stars=Math.max(0,m.stars-c.stars);
+        }
       }
-      // One-off: restore done=false
       if(c.freq==='One-off') c.done=false;
       saveData();renderChores();renderHome();
     });
@@ -1751,16 +1752,17 @@ function doChore(c,m,item){
   // Increment count
   var newCount=count+1;
   setChoreCount(c.id,newCount);
-  // One-off: mark done so it disappears
   if(c.freq==='One-off') c.done=true;
-  awardStars(m,c.stars);
+  if(m.role!=='caregiver') awardStars(m,c.stars);
   playSparkle();
   saveData();
   renderChores();
   renderHome();
-  var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
-  var earned=m.goalPrize&&prizes.find(function(p){return p.id===m.goalPrize&&availStars>=p.stars;});
-  showCel(m,c.stars,c.name,!!earned,earned||null);
+  if(m.role!=='caregiver'){
+    var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
+    var earned=m.goalPrize&&prizes.find(function(p){return p.id===m.goalPrize&&availStars>=p.stars;});
+    showCel(m,c.stars,c.name,!!earned,earned||null);
+  }
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -2725,13 +2727,14 @@ function openEditChore(id){
 function saveChore(){
   var n=$('ci-name').value.trim();
   if(!reqOk(['ci-name',n]))return;
+  var stars=Math.max(1,Math.min(99,parseInt($('ci-stars').value)||1));
   var freq=$('ci-freq').value;
   var times=freq==='XWeekly'?parseInt($('ci-times').value)||2:1;
   if(editChoreId){
     var c=chores.find(function(x){return x.id===editChoreId;});
-    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=+$('ci-stars').value;c.freq=freq;c.timesPerWeek=times;}
+    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=stars;c.freq=freq;c.timesPerWeek=times;}
   } else {
-    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:+$('ci-stars').value,freq:freq,timesPerWeek:times,done:false});
+    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:stars,freq:freq,timesPerWeek:times,done:false});
   }
   cm('m-chore');saveData();renderChores();
 }
