@@ -362,6 +362,11 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <button class="nb" id="nb-parent" onclick="openParent()"><span class="ni">⚙️</span><span class="nl">Settings</span></button>
   <button class="nb" id="nb-tutorial" onclick="navTo('tutorial')"><span class="ni">📖</span><span class="nl">Guide</span></button>
 </nav>
+<!-- Parent mode badge -->
+<div id="parent-mode-badge" style="display:none;position:fixed;top:8px;right:10px;z-index:400;background:var(--am);color:#fff;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:900;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(248,126,40,.4);">
+  <span>🔓 Parent mode</span>
+  <button onclick="setParentUnlocked(false);renderChores();renderRoutines();" style="background:rgba(255,255,255,.25);border:none;color:#fff;border-radius:12px;padding:2px 7px;font-size:10px;font-weight:900;cursor:pointer;font-family:inherit;">Lock</button>
+</div>
 
 <div class="main">
 
@@ -418,7 +423,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
       <button class="hb" onclick="routineDay(-1)">‹</button>
       <button class="hb" onclick="routineToday()">Today</button>
       <button class="hb" onclick="routineDay(1)">›</button>
-      <button class="hb pri" onclick="openAddRoutine()">+ Add</button>
+      <button class="hb pri" id="routine-add-btn" onclick="openAddRoutine()">+ Add</button>
     </div>
   </div>
   <div class="scr" id="routine-body" style="padding:12px 16px 28px;"></div>
@@ -1329,6 +1334,40 @@ const _cs=loadCalSettings();
 //  STATE
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 let pinBuf='',calView='week',calDate=new Date();
+let parentUnlocked=false;
+let parentUnlockTimer=null;
+const PARENT_TIMEOUT=10*60*1000; // 10 minutes
+
+function setParentUnlocked(val){
+  parentUnlocked=val;
+  clearTimeout(parentUnlockTimer);
+  if(val){
+    // Auto-expire after 10 min inactivity
+    parentUnlockTimer=setTimeout(function(){
+      parentUnlocked=false;
+      renderParentBadge();
+      renderChores();
+      renderRoutines();
+    },PARENT_TIMEOUT);
+  }
+  renderParentBadge();
+}
+function resetParentTimer(){
+  if(!parentUnlocked)return;
+  clearTimeout(parentUnlockTimer);
+  parentUnlockTimer=setTimeout(function(){
+    parentUnlocked=false;
+    renderParentBadge();
+    renderChores();
+    renderRoutines();
+  },PARENT_TIMEOUT);
+}
+function renderParentBadge(){
+  var badge=$('parent-mode-badge');
+  if(badge) badge.style.display=parentUnlocked?'flex':'none';
+  var routineAddBtn=$('routine-add-btn');
+  if(routineAddBtn) routineAddBtn.style.display=parentUnlocked?'':'none';
+}
 let shopTab='all',editEventId=null,editMealId=null,editNoteId=null;
 let editMemId=null,selIcon='\u{1F60A}',selColor=COLORS[0];
 let calStartHour=_cs.startHour, calEndHour=_cs.endHour;
@@ -1663,15 +1702,19 @@ function renderChores(){
         +'<div style="font-size:12px;font-weight:700;'+(isDone?'text-decoration:line-through;':'')+'">'+ c.name+'</div>'
         +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+freqLabel+' \u00B7 +'+c.stars+'\u2B50 each</div>'
         +'</div>'
-        +'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;flex-shrink:0;" data-cid="'+c.id+'">\u270F\uFE0F</div>';
-      item.querySelector('[data-cid]').onclick=function(e){e.stopPropagation();openEditChore(c.id);};
+        +(parentUnlocked?'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;flex-shrink:0;" data-cid="'+c.id+'">\u270F\uFE0F</div>':'');
+      if(parentUnlocked){
+        item.querySelector('[data-cid]').onclick=function(e){e.stopPropagation();openEditChore(c.id);};
+      }
       item.onclick=function(){doChore(c,m,item);};
       body.appendChild(item);
     });
-    const ab=el('button','add-row','margin:5px 0 0;font-size:11px;padding:7px 9px;');
-    ab.innerHTML='\uFF0B Add contribution';
-    ab.onclick=function(){editChoreId=null;$('chore-modal-title').textContent='Add Contribution';popMemberSel('ci-mem');$('ci-mem').value=m.id;$('ci-name').value='';$('ci-stars').value='2';$('ci-freq').value='Daily';$('ci-times').value='2';$('ci-times-wrap').classList.add('hid');$('ci-del').style.display='none';sm('m-chore');};
-    body.appendChild(ab);col.appendChild(body);cols.appendChild(col);
+    if(parentUnlocked){
+      const ab=el('button','add-row','margin:5px 0 0;font-size:11px;padding:7px 9px;');
+      ab.innerHTML='\uFF0B Add contribution';
+      ab.onclick=function(){editChoreId=null;$('chore-modal-title').textContent='Add Contribution';popMemberSel('ci-mem');$('ci-mem').value=m.id;$('ci-name').value='';$('ci-stars').value='2';$('ci-freq').value='Daily';$('ci-times').value='2';$('ci-times-wrap').classList.add('hid');$('ci-del').style.display='none';sm('m-chore');};
+      body.appendChild(ab);
+    }col.appendChild(body);cols.appendChild(col);
   });
 }
 function doChore(c,m,item){
@@ -2869,7 +2912,7 @@ function renderRoutines(){
           </div>
           <div class="ri-name${done?' done':''}">${r.name}</div>
           ${r.type==='together'?'<div class="ri-together">\uD83D\uDC9B Together</div>':''}
-          <div style="font-size:14px;color:var(--tx3);padding:2px 4px;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();openEditRoutine('${r.id}')">\u270F\uFE0F</div>`;
+          ${parentUnlocked?`<div style="font-size:14px;color:var(--tx3);padding:2px 4px;cursor:pointer;flex-shrink:0;" onclick="event.stopPropagation();openEditRoutine('${r.id}')">\u270F\uFE0F</div>`:''}`;
         row.onclick = () => toggleRoutineItem(r, m, dk, blockItems, block);
         sect.appendChild(row);
       });
@@ -2903,11 +2946,13 @@ function renderRoutines(){
     body.appendChild(sharedCard);
   }
 
-  // Add routine button
-  const ab = el('button','add-row','margin-top:8px;');
-  ab.innerHTML = '\uFF0B Add routine item';
-  ab.onclick = openAddRoutine;
-  body.appendChild(ab);
+  // Add routine button — only visible in parent mode
+  if(parentUnlocked){
+    const ab = el('button','add-row','margin-top:8px;');
+    ab.innerHTML = '\uFF0B Add routine item';
+    ab.onclick = openAddRoutine;
+    body.appendChild(ab);
+  }
 }
 
 function toggleRoutineItem(r, m, dk, blockItems, block){
@@ -3909,7 +3954,9 @@ function pk(k){
   if(pinBuf.length===4){
     setTimeout(()=>{
       if(pinBuf===getPin()){
-        cm('pin-ov');pinBuf='';upPinDots();navTo('parent');
+        cm('pin-ov');pinBuf='';upPinDots();
+        setParentUnlocked(true);
+        navTo('parent');
       } else {
         $('perr').textContent='Wrong PIN';
         // Show recovery hint after failed attempt
@@ -4122,6 +4169,7 @@ function lkPaint(){
 
 function lockApp(){
   sessionStorage.removeItem('fh_unlocked');
+  setParentUnlocked(false);
   const lock=$('lock');
   lock.style.transition='';
   lock.style.opacity='1';
@@ -4295,6 +4343,12 @@ document.addEventListener('change',function(e){
     if(err)err.classList.remove('show');
   }
 },true);
+
+// Reset parent unlock timer on any tap/click
+document.addEventListener('touchstart',function(){resetParentTimer();},true);
+document.addEventListener('mousedown',function(){resetParentTimer();},true);
+// Hide routine add button initially (parent mode only)
+(function(){var b=$('routine-add-btn');if(b)b.style.display='none';})();
 
 </script>
 
