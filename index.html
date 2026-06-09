@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0035)https://stgfamily.github.io/Kinori/ -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Kinori</title>
-<link href="./Kinori_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -20,10 +21,19 @@
   font-family:'Nunito',system-ui,sans-serif;
 }
 body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
-.app{display:flex;height:100vh;overflow:hidden;}
+html,body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--bg);}
+.app{display:flex;height:100vh;height:-webkit-fill-available;overflow:hidden;}
 
 /* ── SIDENAV ── */
-.snav{width:74px;background:var(--sf);border-right:2px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:10px 0 18px;z-index:40;flex-shrink:0;gap:2px;}
+.snav{width:74px;background:var(--sf);border-right:2px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:10px 0 18px;z-index:40;flex-shrink:0;gap:2px;overflow-y:auto;}
+/* Landscape on iPad — keep nav on left, ensure full height */
+@media (orientation:landscape){
+  .app{flex-direction:row;}
+  .snav{height:100vh;width:74px;flex-direction:column;}
+}
+@media (orientation:portrait){
+  .app{flex-direction:row;}
+}
 .snav-logo{width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:14px;transition:background .18s;flex-shrink:0;}
 .snav-logo:hover{background:var(--sf2);}
 .snav-spacer{height:4px;}
@@ -1202,7 +1212,8 @@ function playPrize(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 const PIN_KEY = 'kinori_pin';
 const PIN_RECOVERY_KEY = 'kinori_pin_recovery';
-const BUILD_ID = 'kinori_2026_04_21_v1';  // updated each build — triggers fresh start on new downloads
+const BUILD_ID = 'kinori_2026_04_21_v1';  // update only when data schema changes
+const DATA_SCHEMA_VERSION = '2';  // increment this ONLY when localStorage structure breaks
 const DEFAULT_PIN = '1234';
 function getPin(){return localStorage.getItem(PIN_KEY)||DEFAULT_PIN;}
 function savePin(p){localStorage.setItem(PIN_KEY,p);}
@@ -4312,11 +4323,11 @@ function changeAppPassword(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// If this is a newly downloaded file (build ID doesn't match stored), wipe everything
-// This prevents stale test data appearing when a new version is opened on a device
-if(localStorage.getItem('kinori_build_id') !== BUILD_ID){
+// Only wipe localStorage when DATA_SCHEMA_VERSION changes (breaking schema change)
+// Normal code/UI updates preserve all family data across uploads
+if(localStorage.getItem('kinori_schema_version') !== DATA_SCHEMA_VERSION){
   localStorage.clear();
-  localStorage.setItem('kinori_build_id', BUILD_ID);
+  localStorage.setItem('kinori_schema_version', DATA_SCHEMA_VERSION);
 }
 
 // First visit: go straight to onboarding
