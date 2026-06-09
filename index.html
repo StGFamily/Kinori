@@ -915,9 +915,18 @@ body{background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
   <div class="mhnd"></div><h2 id="chore-modal-title">Add Contribution</h2>
   <div class="ff"><label>Contribution name</label><input id="ci-name" placeholder="e.g. Feed the dog"></div>
   <div class="ff"><label>Assign to</label><select id="ci-mem"></select></div>
-  <div class="ff"><label>Stars</label><select id="ci-stars"><option value="1">1 ⭐</option><option value="2" selected="">2 ⭐</option><option value="3">3 ⭐</option><option value="4">4 ⭐</option><option value="5">5 ⭐</option></select></div>
-  <div class="ff"><label>Frequency</label><select id="ci-freq"><option>Daily</option><option>Weekly</option><option>One-off</option></select></div>
-  <div class="mbts"><button class="mbt can" onclick="cm(&#39;m-chore&#39;)">Cancel</button><button class="mbt cfm" onclick="saveChore()">Save</button></div>
+  <div class="ff"><label>Stars per completion</label><select id="ci-stars"><option value="1">1 ⭐</option><option value="2" selected="">2 ⭐</option><option value="3">3 ⭐</option><option value="4">4 ⭐</option><option value="5">5 ⭐</option><option value="6">6 ⭐</option><option value="7">7 ⭐</option><option value="8">8 ⭐</option><option value="9">9 ⭐</option><option value="10">10 ⭐</option></select></div>
+  <div class="ff"><label>Frequency</label><select id="ci-freq" onchange="toggleChoreFreqFields()">
+    <option value="Daily">Daily</option>
+    <option value="Weekly">Once a week</option>
+    <option value="XWeekly">X times a week</option>
+    <option value="One-off">One-off</option>
+  </select></div>
+  <div class="ff hid" id="ci-times-wrap">
+    <label>Times per week</label>
+    <select id="ci-times"><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option><option value="5">5×</option><option value="6">6×</option></select>
+  </div>
+  <div class="mbts"><button class="mbt can" onclick="cm('m-chore')">Cancel</button><button class="mbt cfm" onclick="saveChore()">Save</button></div>
   <button class="mbt del" id="ci-del" style="width:100%;margin-top:7px;display:none;" onclick="deleteChore()">Delete Contribution</button>
 </div></div>
 
@@ -1626,48 +1635,62 @@ function renderHome(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 function renderChores(){
   const cols=$('chore-cols');cols.innerHTML='';
-  sortedMembers().forEach(m=>{
-    const mc=chores.filter(c=>c.member===m.id);
-    const done=mc.filter(c=>c.done).length;
-    const pct=mc.length?Math.round(done/mc.length*100):0;
+  sortedMembers().forEach(function(m){
+    var mc=chores.filter(function(c){return c.member===m.id&&!(c.freq==='One-off'&&c.done);});
+    var done=mc.filter(function(c){return choreIsDone(c);}).length;
+    var pct=mc.length?Math.round(done/mc.length*100):0;
     const col=el('div','ccol');
-    col.innerHTML=`<div class="ccol-hdr">
-      <div class="ccol-emo" style="border-color:${m.color};background:${m.color}18;">${m.icon}</div>
-      <div style="font-size:13px;font-weight:900;">${m.name}</div>
-      <div style="font-size:10px;color:var(--tx3);">${done} of ${mc.length} done</div>
-      <div style="height:5px;border-radius:3px;background:var(--bd);overflow:hidden;width:100%;margin-top:2px;">
-        <div style="width:${pct}%;height:100%;border-radius:3px;background:${m.color};transition:width .4s;"></div></div>
-    </div>`;
+    col.innerHTML='<div class="ccol-hdr">'
+      +'<div class="ccol-emo" style="border-color:'+m.color+';background:'+m.color+'18;">'+m.icon+'</div>'
+      +'<div style="font-size:13px;font-weight:900;">'+m.name+'</div>'
+      +'<div style="font-size:10px;color:var(--tx3);">'+done+' of '+mc.length+' done</div>'
+      +'<div style="height:5px;border-radius:3px;background:var(--bd);overflow:hidden;width:100%;margin-top:2px;">'
+      +'<div style="width:'+pct+'%;height:100%;border-radius:3px;background:'+m.color+';transition:width .4s;"></div></div>'
+      +'</div>';
     const body=el('div','ccol-body');
-    mc.forEach(c=>{
-      const item=el('div','ci'+(c.done?' done':''));
-      item.innerHTML='<div class="cchk'+(c.done?' done':'')+'" style="border-color:'+m.color+';'+(c.done?'background:'+m.color+';':'')+'">'+( c.done?'\u2713':'')+'</div>'
-        +'<div style="flex:1;"><div style="font-size:12px;font-weight:700;'+(c.done?'text-decoration:line-through;':'')+'">'+ c.name+'</div>'
-        +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+c.freq+' \u00B7 +'+c.stars+'\u2B50</div></div>'
+    mc.forEach(function(c){
+      var count=getChoreCount(c.id);
+      var target=choreTarget(c);
+      var isDone=count>=target;
+      var freqLabel=c.freq==='Daily'?'Daily'
+        :c.freq==='Weekly'?'Once a week'
+        :c.freq==='XWeekly'?(count+'/'+target+' this week')
+        :'One-off';
+      const item=el('div','ci'+(isDone?' done':''));
+      var checkHtml='<div class="cchk'+(isDone?' done':'')+'" style="border-color:'+m.color+';'+(isDone?'background:'+m.color+';':'')+'">'+(isDone?'\u2713':c.freq==='XWeekly'&&count>0?count:'')+'</div>';
+      item.innerHTML=checkHtml
+        +'<div style="flex:1;">'
+        +'<div style="font-size:12px;font-weight:700;'+(isDone?'text-decoration:line-through;':'')+'">'+ c.name+'</div>'
+        +'<div style="font-size:9px;color:var(--tx3);margin-top:1px;">'+freqLabel+' \u00B7 +'+c.stars+'\u2B50 each</div>'
+        +'</div>'
         +'<div style="font-size:14px;color:var(--tx3);padding:2px 6px;cursor:pointer;flex-shrink:0;" data-cid="'+c.id+'">\u270F\uFE0F</div>';
       item.querySelector('[data-cid]').onclick=function(e){e.stopPropagation();openEditChore(c.id);};
-      item.onclick=()=>doChore(c,m,item);
+      item.onclick=function(){doChore(c,m,item);};
       body.appendChild(item);
     });
     const ab=el('button','add-row','margin:5px 0 0;font-size:11px;padding:7px 9px;');
     ab.innerHTML='\uFF0B Add contribution';
-    ab.onclick=()=>{popMemberSel('ci-mem');$('ci-mem').value=m.id;sm('m-chore');};
+    ab.onclick=function(){editChoreId=null;$('chore-modal-title').textContent='Add Contribution';popMemberSel('ci-mem');$('ci-mem').value=m.id;$('ci-name').value='';$('ci-stars').value='2';$('ci-freq').value='Daily';$('ci-times').value='2';$('ci-times-wrap').classList.add('hid');$('ci-del').style.display='none';sm('m-chore');};
     body.appendChild(ab);col.appendChild(body);cols.appendChild(col);
   });
 }
 function doChore(c,m,item){
-  if(c.done){
+  var count=getChoreCount(c.id);
+  var target=choreTarget(c);
+  var isDone=count>=target;
+
+  if(isDone){
+    // Allow un-doing if already fully complete
     appConfirm({
       icon:'\u21A9\uFE0F',
       title:'Un-complete contribution?',
       msg:'"'+c.name+'" will be unchecked and '+c.stars+' star'+(c.stars>1?'s':'')+' will be removed from '+m.name+'.',
-      yesLabel:'Yes, undo it',
-      noLabel:'Keep it done'
-    }, ok=>{
+      yesLabel:'Yes, undo it',noLabel:'Keep it done'
+    }, function(ok){
       if(!ok)return;
-      c.done=false;
+      var newCount=Math.max(0,count-1);
+      setChoreCount(c.id,newCount);
       if(m.financialEnabled){
-        // Reverse the split proportionally from each bucket
         var rev=splitStars(c.stars,m);
         m.starsSpend=Math.max(0,(m.starsSpend||0)-rev.spend);
         m.starsSave=Math.max(0,(m.starsSave||0)-rev.save);
@@ -1675,18 +1698,25 @@ function doChore(c,m,item){
       } else {
         m.stars=Math.max(0,m.stars-c.stars);
       }
-      saveData(); renderChores(); renderHome();
+      // One-off: restore done=false
+      if(c.freq==='One-off') c.done=false;
+      saveData();renderChores();renderHome();
     });
     return;
   }
-  c.done=true;
+
+  // Increment count
+  var newCount=count+1;
+  setChoreCount(c.id,newCount);
+  // One-off: mark done so it disappears
+  if(c.freq==='One-off') c.done=true;
   awardStars(m,c.stars);
   playSparkle();
   saveData();
   renderChores();
   renderHome();
-  var totalStars=m.financialEnabled?(m.starsSpend||0):m.stars;
-  var earned=m.goalPrize&&prizes.find(function(p){return p.id===m.goalPrize&&totalStars>=p.stars;});
+  var availStars=m.financialEnabled?(m.starsSpend||0):m.stars;
+  var earned=m.goalPrize&&prizes.find(function(p){return p.id===m.goalPrize&&availStars>=p.stars;});
   showCel(m,c.stars,c.name,!!earned,earned||null);
 }
 
@@ -2600,11 +2630,39 @@ function deleteStore(){
 //  PRIZE / CHORE MODALS
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 var editChoreId=null;
+// ── Chore frequency helpers ──
+function choreDayKey(){return 'cd_'+todayStr();}
+function choreWeekKey(){var d=new Date();var s=new Date(d);s.setDate(d.getDate()-d.getDay());return 'cw_'+s.toISOString().split('T')[0];}
+function getChoreCount(choreId){
+  var c=chores.find(function(x){return x.id===choreId;});if(!c)return 0;
+  if(c.freq==='Daily') return parseInt(localStorage.getItem(choreDayKey()+'_'+choreId)||'0');
+  if(c.freq==='Weekly'||c.freq==='XWeekly') return parseInt(localStorage.getItem(choreWeekKey()+'_'+choreId)||'0');
+  return c.done?1:0;
+}
+function setChoreCount(choreId,n){
+  var c=chores.find(function(x){return x.id===choreId;});if(!c)return;
+  if(c.freq==='Daily') localStorage.setItem(choreDayKey()+'_'+choreId,n);
+  else if(c.freq==='Weekly'||c.freq==='XWeekly') localStorage.setItem(choreWeekKey()+'_'+choreId,n);
+  else c.done=(n>0);
+}
+function choreTarget(c){
+  if(c.freq==='Daily') return 1;
+  if(c.freq==='Weekly') return 1;
+  if(c.freq==='XWeekly') return c.timesPerWeek||2;
+  return 1; // One-off
+}
+function choreIsDone(c){return getChoreCount(c.id)>=choreTarget(c);}
+
+function toggleChoreFreqFields(){
+  var v=$('ci-freq').value;
+  $('ci-times-wrap').classList.toggle('hid',v!=='XWeekly');
+}
 function openAddChore(){
   editChoreId=null;
   $('chore-modal-title').textContent='Add Contribution';
   popMemberSel('ci-mem');$('ci-name').value='';
   $('ci-stars').value='2';$('ci-freq').value='Daily';
+  $('ci-times').value='2';$('ci-times-wrap').classList.add('hid');
   $('ci-del').style.display='none';
   sm('m-chore');
 }
@@ -2616,24 +2674,28 @@ function openEditChore(id){
   $('ci-name').value=c.name;
   $('ci-stars').value=c.stars||2;
   $('ci-freq').value=c.freq||'Daily';
+  $('ci-times').value=c.timesPerWeek||2;
+  $('ci-times-wrap').classList.toggle('hid',c.freq!=='XWeekly');
   $('ci-del').style.display='block';
   sm('m-chore');
 }
 function saveChore(){
   var n=$('ci-name').value.trim();
   if(!reqOk(['ci-name',n]))return;
+  var freq=$('ci-freq').value;
+  var times=freq==='XWeekly'?parseInt($('ci-times').value)||2:1;
   if(editChoreId){
     var c=chores.find(function(x){return x.id===editChoreId;});
-    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=+$('ci-stars').value;c.freq=$('ci-freq').value;}
+    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=+$('ci-stars').value;c.freq=freq;c.timesPerWeek=times;}
   } else {
-    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:+$('ci-stars').value,freq:$('ci-freq').value,done:false});
+    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:+$('ci-stars').value,freq:freq,timesPerWeek:times,done:false});
   }
   cm('m-chore');saveData();renderChores();
 }
 function deleteChore(){
   if(!editChoreId)return;
   var c=chores.find(function(x){return x.id===editChoreId;});
-  appConfirm({icon:'!',title:'Delete "'+( c?c.name:'this contribution')+'"?',msg:'It will be removed permanently.',yesLabel:'Delete',noLabel:'Keep'},function(ok){
+  appConfirm({icon:'!',title:'Delete "'+(c?c.name:'this contribution')+'"?',msg:'It will be removed permanently.',yesLabel:'Delete',noLabel:'Keep'},function(ok){
     if(!ok)return;
     chores=chores.filter(function(x){return x.id!==editChoreId;});
     cm('m-chore');saveData();renderChores();
