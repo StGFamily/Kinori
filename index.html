@@ -373,9 +373,9 @@ html,body{height:100%;height:-webkit-fill-available;overflow:hidden;background:v
   <button class="nb" id="nb-tutorial" onclick="navTo('tutorial')"><span class="ni">📖</span><span class="nl">Guide</span></button>
 </nav>
 <!-- Parent mode badge -->
-<div id="parent-mode-badge" style="display:none;position:fixed;top:8px;right:10px;z-index:400;background:var(--am);color:#fff;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:900;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(248,126,40,.4);">
-  <span>🔓 Parent mode</span>
-  <button onclick="setParentUnlocked(false);renderChores();renderRoutines();" style="background:rgba(255,255,255,.25);border:none;color:#fff;border-radius:12px;padding:2px 7px;font-size:10px;font-weight:900;cursor:pointer;font-family:inherit;">Lock</button>
+<div id="parent-mode-badge" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:400;background:var(--am);color:#fff;border-radius:20px;padding:8px 16px;font-size:12px;font-weight:900;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(248,126,40,.45);white-space:nowrap;">
+  <span>🔓 Parent mode on</span>
+  <button onclick="setParentUnlocked(false);renderChores();renderRoutines();" style="background:rgba(255,255,255,.25);border:none;color:#fff;border-radius:12px;padding:3px 10px;font-size:11px;font-weight:900;cursor:pointer;font-family:inherit;">Lock</button>
 </div>
 
 <div class="main">
@@ -929,7 +929,10 @@ html,body{height:100%;height:-webkit-fill-available;overflow:hidden;background:v
 <div class="ov hid" id="m-chore"><div class="modal">
   <div class="mhnd"></div><h2 id="chore-modal-title">Add Contribution</h2>
   <div class="ff"><label>Contribution name</label><input id="ci-name" placeholder="e.g. Feed the dog"></div>
-  <div class="ff"><label>Assign to</label><select id="ci-mem"></select></div>
+  <div class="ff">
+    <label>Assign to</label>
+    <div id="ci-mem-list" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;"></div>
+  </div>
   <div class="ff"><label>Stars per completion</label><input id="ci-stars" type="number" min="1" max="99" value="2" style="width:100%;"></div>
   <div class="ff"><label>Frequency</label><select id="ci-freq" onchange="toggleChoreFreqFields()">
     <option value="Daily">Daily</option>
@@ -1723,10 +1726,16 @@ function renderChores(){
     if(parentUnlocked){
       const ab=el('button','add-row','margin:5px 0 0;font-size:11px;padding:7px 9px;');
       ab.innerHTML='\uFF0B Add contribution';
-      ab.onclick=function(){editChoreId=null;$('chore-modal-title').textContent='Add Contribution';popMemberSel('ci-mem');$('ci-mem').value=m.id;$('ci-name').value='';$('ci-stars').value='2';$('ci-freq').value='Daily';$('ci-times').value='2';$('ci-times-wrap').classList.add('hid');$('ci-del').style.display='none';sm('m-chore');};
+      ab.onclick=function(){editChoreId=null;$('chore-modal-title').textContent='Add Contribution';buildChoreMemberList([m.id]);$('ci-name').value='';$('ci-stars').value='2';$('ci-freq').value='Daily';$('ci-times').value='2';$('ci-times-wrap').classList.add('hid');$('ci-del').style.display='none';sm('m-chore');};
       body.appendChild(ab);
     }col.appendChild(body);cols.appendChild(col);
   });
+  // Hint when parent mode is off
+  if(!parentUnlocked){
+    var hint=el('div','','flex-shrink:0;text-align:center;padding:14px 16px 6px;font-size:12px;color:var(--tx3);');
+    hint.innerHTML='\uD83D\uDD12 Tap <b>Settings</b> and enter your PIN to add or edit tasks';
+    $('chore-cols').parentNode.appendChild(hint);
+  }
 }
 function doChore(c,m,item){
   var count=getChoreCount(c.id);
@@ -2713,10 +2722,28 @@ function toggleChoreFreqFields(){
   var v=$('ci-freq').value;
   $('ci-times-wrap').classList.toggle('hid',v!=='XWeekly');
 }
+function buildChoreMemberList(selectedIds){
+  var list=$('ci-mem-list');if(!list)return;
+  list.innerHTML='';
+  sortedMembers().forEach(function(m){
+    var checked=selectedIds&&selectedIds.indexOf(m.id)>=0;
+    var row=document.createElement('label');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--sf2);border-radius:9px;cursor:pointer;';
+    row.innerHTML='<input type="checkbox" value="'+m.id+'" '+(checked?'checked':'')+' style="width:16px;height:16px;cursor:pointer;accent-color:'+m.color+';">'
+      +'<div style="width:30px;height:30px;border-radius:50%;background:'+m.color+'22;display:flex;align-items:center;justify-content:center;font-size:16px;">'+m.icon+'</div>'
+      +'<span style="font-size:13px;font-weight:700;">'+m.name+'</span>';
+    list.appendChild(row);
+  });
+}
+function getSelectedChoreMembers(){
+  var list=$('ci-mem-list');if(!list)return[];
+  return Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(function(cb){return cb.value;});
+}
 function openAddChore(){
   editChoreId=null;
   $('chore-modal-title').textContent='Add Contribution';
-  popMemberSel('ci-mem');$('ci-name').value='';
+  buildChoreMemberList([]);
+  $('ci-name').value='';
   $('ci-stars').value='2';$('ci-freq').value='Daily';
   $('ci-times').value='2';$('ci-times-wrap').classList.add('hid');
   $('ci-del').style.display='none';
@@ -2726,7 +2753,7 @@ function openEditChore(id){
   var c=chores.find(function(x){return x.id===id;});if(!c)return;
   editChoreId=id;
   $('chore-modal-title').textContent='Edit Contribution';
-  popMemberSel('ci-mem');$('ci-mem').value=c.member;
+  buildChoreMemberList(c.members||[c.member]);
   $('ci-name').value=c.name;
   $('ci-stars').value=c.stars||2;
   $('ci-freq').value=c.freq||'Daily';
@@ -2738,23 +2765,45 @@ function openEditChore(id){
 function saveChore(){
   var n=$('ci-name').value.trim();
   if(!reqOk(['ci-name',n]))return;
+  var selectedMems=getSelectedChoreMembers();
+  if(!selectedMems.length){alert('Please assign this task to at least one person.');return;}
   var stars=Math.max(1,Math.min(99,parseInt($('ci-stars').value)||1));
   var freq=$('ci-freq').value;
   var times=freq==='XWeekly'?parseInt($('ci-times').value)||2:1;
   if(editChoreId){
-    var c=chores.find(function(x){return x.id===editChoreId;});
-    if(c){c.name=n;c.member=$('ci-mem').value;c.stars=stars;c.freq=freq;c.timesPerWeek=times;}
+    // Edit: update existing chore, create/remove extras for multi-member
+    var existing=chores.find(function(x){return x.id===editChoreId;});
+    if(existing){
+      existing.name=n;existing.stars=stars;existing.freq=freq;existing.timesPerWeek=times;
+      existing.member=selectedMems[0];existing.members=selectedMems;
+      // Remove any sibling chores from previous multi-assign
+      if(existing.groupId){
+        chores=chores.filter(function(x){return x.groupId!==existing.groupId||x.id===editChoreId;});
+      }
+      var groupId=existing.groupId||('g'+Date.now());
+      existing.groupId=groupId;
+      // Create chores for additional members
+      selectedMems.slice(1).forEach(function(mid){
+        chores.push({id:'c'+Date.now()+Math.random().toString(36).slice(2),name:n,member:mid,members:selectedMems,stars:stars,freq:freq,timesPerWeek:times,done:false,groupId:groupId});
+      });
+    }
   } else {
-    chores.push({id:'c'+Date.now(),name:n,member:$('ci-mem').value,stars:stars,freq:freq,timesPerWeek:times,done:false});
+    var groupId='g'+Date.now();
+    selectedMems.forEach(function(mid){
+      chores.push({id:'c'+Date.now()+Math.random().toString(36).slice(2),name:n,member:mid,members:selectedMems,stars:stars,freq:freq,timesPerWeek:times,done:false,groupId:groupId});
+    });
   }
   cm('m-chore');saveData();renderChores();
 }
 function deleteChore(){
   if(!editChoreId)return;
   var c=chores.find(function(x){return x.id===editChoreId;});
-  appConfirm({icon:'!',title:'Delete "'+(c?c.name:'this contribution')+'"?',msg:'It will be removed permanently.',yesLabel:'Delete',noLabel:'Keep'},function(ok){
+  var isGroup=c&&c.groupId&&chores.filter(function(x){return x.groupId===c.groupId;}).length>1;
+  var msg=isGroup?'This task is assigned to multiple people. Delete for everyone?':'It will be removed permanently.';
+  appConfirm({icon:'!',title:'Delete "'+(c?c.name:'this contribution')+'"?',msg:msg,yesLabel:'Delete',noLabel:'Keep'},function(ok){
     if(!ok)return;
-    chores=chores.filter(function(x){return x.id!==editChoreId;});
+    if(isGroup){chores=chores.filter(function(x){return x.groupId!==c.groupId;});}
+    else{chores=chores.filter(function(x){return x.id!==editChoreId;});}
     cm('m-chore');saveData();renderChores();
   });
 }
@@ -2966,6 +3015,10 @@ function renderRoutines(){
     ab.innerHTML = '\uFF0B Add routine item';
     ab.onclick = openAddRoutine;
     body.appendChild(ab);
+  } else {
+    var hint=el('div','','text-align:center;padding:14px 16px 6px;font-size:12px;color:var(--tx3);');
+    hint.innerHTML='\uD83D\uDD12 Tap <b>Settings</b> and enter your PIN to add or edit routines';
+    body.appendChild(hint);
   }
 }
 
@@ -4323,10 +4376,15 @@ function changeAppPassword(){
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// Only wipe localStorage when DATA_SCHEMA_VERSION changes (breaking schema change)
-// Normal code/UI updates preserve all family data across uploads
-if(localStorage.getItem('kinori_schema_version') !== DATA_SCHEMA_VERSION){
-  localStorage.clear();
+// Only wipe if schema version changes AND there's no existing family data to preserve
+var _storedSchema = localStorage.getItem('kinori_schema_version');
+var _hasData = !!localStorage.getItem('familyhub_v5');
+if(_storedSchema !== DATA_SCHEMA_VERSION){
+  if(_storedSchema !== null && !_hasData){
+    // Old schema, no data — safe to wipe
+    localStorage.clear();
+  }
+  // Always stamp the current version
   localStorage.setItem('kinori_schema_version', DATA_SCHEMA_VERSION);
 }
 
