@@ -179,7 +179,7 @@ html,body{height:100%;height:-webkit-fill-available;overflow:hidden;background:v
 /* ── MODALS ── */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
 .ov.ctr{align-items:center;}
-.ov.hid{display:none;}
+.hid{display:none!important;}
 .modal{background:var(--sf);border-radius:22px 22px 0 0;padding:18px 18px 28px;width:100%;max-height:88vh;overflow-y:auto;}
 .ov.ctr .modal{border-radius:20px;max-width:500px;width:calc(100% - 36px);}
 .mhnd{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:0 auto 13px;}
@@ -2060,9 +2060,9 @@ function saveEvent(){
       if(!dates.length)dates.push(dt);
     } else {
       const endDt=$('ei-recur-end').value;
-      if(!endDt){$('ei-recur-end').style.borderColor='var(--rd)';setTimeout(function(){$('ei-recur-end').style.borderColor='';},1500);return;}
+      if(!reqOk(['ei-recur-end',endDt]))return;
       const start=new Date(dt+'T00:00:00');const end=new Date(endDt+'T00:00:00');
-      if(end<start){$('ei-recur-end').style.borderColor='var(--rd)';return;}
+      if(end<start){flashReq('ei-recur-end');return;}
       const origDay=start.getDay();let cur=new Date(start);
       while(cur<=end&&dates.length<200){
         const ds=new Date(cur.getTime()-cur.getTimezoneOffset()*60000).toISOString().split('T')[0];
