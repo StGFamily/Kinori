@@ -4417,24 +4417,34 @@ function changeAppPassword(){
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 // ── STARTUP ──
-// Safari on iPad can evict localStorage for websites. To defend against this,
-// we keep a sessionStorage backup of the critical "has been set up" flag.
-// If localStorage is missing the flag but sessionStorage has it, restore it.
-if(!localStorage.getItem('kinori_onboarded') && sessionStorage.getItem('kinori_onboarded_bk')==='1'){
+var _isStandalone=(window.navigator.standalone===true)||window.matchMedia('(display-mode:standalone)').matches;
+
+// Restore from sessionStorage backup if localStorage was evicted
+if(!localStorage.getItem('kinori_onboarded')&&sessionStorage.getItem('kinori_onboarded_bk')==='1'){
   localStorage.setItem('kinori_onboarded','1');
 }
-if(!localStorage.getItem('fh_unlocked') && sessionStorage.getItem('fh_unlocked_bk')==='1'){
+if(!localStorage.getItem('fh_unlocked')&&sessionStorage.getItem('fh_unlocked_bk')==='1'){
   localStorage.setItem('fh_unlocked','1');
 }
 
-var _hasExistingData = !!localStorage.getItem('familyhub_v5') || !!localStorage.getItem('kinori_onboarded');
+var _hasExistingData=!!localStorage.getItem('familyhub_v5')||!!localStorage.getItem('kinori_onboarded');
 
 if(!localStorage.getItem('kinori_schema_version')){
-  localStorage.setItem('kinori_schema_version', DATA_SCHEMA_VERSION);
+  localStorage.setItem('kinori_schema_version',DATA_SCHEMA_VERSION);
 }
 
 if(_hasExistingData){
   lkInit();
+  // Show browser mode warning after lock screen loads
+  if(!_isStandalone){
+    setTimeout(function(){
+      var warn=document.createElement('div');
+      warn.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;border-radius:12px;padding:10px 16px;font-size:11px;font-weight:700;z-index:9999;text-align:center;max-width:280px;line-height:1.5;';
+      warn.innerHTML='\uD83D\uDCA1 For best experience: open in Safari, tap Share \u2192 <b>Add to Home Screen</b>, then use that icon.';
+      document.body.appendChild(warn);
+      setTimeout(function(){warn.remove();},6000);
+    },1500);
+  }
 } else {
   $('lock').classList.add('gone');
   obStart();
