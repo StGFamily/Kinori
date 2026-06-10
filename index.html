@@ -1447,7 +1447,8 @@ function reqOk(){
   }
   return allOk;
 }
-function todayStr(){return new Date().toISOString().split('T')[0];}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dateToStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
 // Custom confirm \u2014 replaces browser confirm() which Safari blocks on local/GitHub-hosted files
 function appConfirm(opts, cb){
@@ -1877,7 +1878,7 @@ function renderWeek(){
   allDayLabel.textContent='all day';
   allDayRow.appendChild(allDayLabel);
   days.forEach(function(d){
-    const ds=d.toISOString().split('T')[0];
+    const ds=dateToStr(d);
     const allDayEvs=events.filter(function(e){return e.date===ds&&e.allDay;});
     const cell=el('div','',`padding:2px;min-height:${allDayEvs.length?'auto':'16px'};`);
     allDayEvs.forEach(function(ev){
@@ -1913,7 +1914,7 @@ function renderWeek(){
 
   // Event overlays \u2014 one per day column
   days.forEach((d,di)=>{
-    const ds=d.toISOString().split('T')[0];
+    const ds=dateToStr(d);
     const dayEvs=events.filter(e=>e.date===ds&&!e.allDay);
     if(!dayEvs.length)return;
 
@@ -1988,7 +1989,7 @@ function renderWeek(){
 function renderDay(){
   $('cal-title').textContent=DNAMES_L[calDate.getDay()]+', '+MONTHS[calDate.getMonth()]+' '+calDate.getDate();
   const body=$('cal-body');body.innerHTML='';
-  const ds=calDate.toISOString().split('T')[0];
+  const ds=dateToStr(calDate);
   const de=events.filter(e=>e.date===ds).sort((a,b)=>a.time.localeCompare(b.time));
   if(!de.length){body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--tx3);font-size:13px;font-weight:700;">No events \u2014 tap + Add</div>';return;}
   de.forEach(e=>body.appendChild(buildEvCard(e)));
@@ -2065,7 +2066,7 @@ function saveEvent(){
       const base=new Date(dt+'T00:00:00');
       const weekStart=new Date(base.getTime()-base.getDay()*86400000);
       document.querySelectorAll('.recur-day-btn.on').forEach(function(b){
-        dates.push(new Date(weekStart.getTime()+parseInt(b.dataset.day)*86400000).toISOString().split('T')[0]);
+        dates.push(dateToStr(new Date(weekStart.getTime()+parseInt(b.dataset.day)*86400000)));
       });
       if(!dates.length)dates.push(dt);
     } else {
@@ -2075,7 +2076,7 @@ function saveEvent(){
       if(end<start){flashReq('ei-recur-end');return;}
       const origDay=start.getDay();let cur=new Date(start);
       while(cur<=end&&dates.length<200){
-        const ds=new Date(cur.getTime()-cur.getTimezoneOffset()*60000).toISOString().split('T')[0];
+        const ds=dateToStr(cur);
         if(recur==='daily')dates.push(ds);
         else if(recur==='weekly'&&cur.getDay()===origDay)dates.push(ds);
         else if(recur==='weekdays'&&cur.getDay()>=1&&cur.getDay()<=5)dates.push(ds);
@@ -2562,13 +2563,13 @@ function checkAutoReset(){
   const lastKey='kinori_last_reset';
   const last=localStorage.getItem(lastKey);
   const now=new Date();
-  const nowStr=now.toISOString().split('T')[0];
+  const nowStr=todayStr();
   let shouldReset=false;
   if(freq==='weekly'&&now.getDay()===0){const week=getWeekStr(now);if(last!==week){shouldReset=true;localStorage.setItem(lastKey,week);}}
   if(freq==='monthly'&&now.getDate()===1){const mo=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');if(last!==mo){shouldReset=true;localStorage.setItem(lastKey,mo);}}
   if(shouldReset) doPointsReset();
 }
-function getWeekStr(d){const s=new Date(d);s.setDate(d.getDate()-d.getDay());return s.toISOString().split('T')[0];}
+function getWeekStr(d){const s=new Date(d);s.setDate(d.getDate()-d.getDay());return dateToStr(s);}
 function doPointsReset(){
   // Save current stars to tally
   const tally=getMonthlyTally();
@@ -2707,7 +2708,7 @@ function deleteStore(){
 var editChoreId=null;
 // ── Chore frequency helpers ──
 function choreDayKey(){return 'cd_'+todayStr();}
-function choreWeekKey(){var d=new Date();var s=new Date(d);s.setDate(d.getDate()-d.getDay());return 'cw_'+s.toISOString().split('T')[0];}
+function choreWeekKey(){var d=new Date();var s=new Date(d);s.setDate(d.getDate()-d.getDay());return 'cw_'+dateToStr(s);}
 function getChoreCount(choreId){
   var c=chores.find(function(x){return x.id===choreId;});if(!c)return 0;
   if(c.freq==='Daily') return parseInt(localStorage.getItem(choreDayKey()+'_'+choreId)||'0');
@@ -2826,7 +2827,7 @@ function routineDay(d){routineDate=new Date(routineDate.getTime()+d*864e5);rende
 function routineToday(){routineDate=new Date();renderRoutines();}
 
 // Key for storing per-day completion: "YYYY-MM-DD:routineId"
-function routineDateKey(d){return d.toISOString().split('T')[0];}
+function routineDateKey(d){return dateToStr(d);}
 
 // Get or init the routine completion log (stored separately so daily state persists properly)
 function getRoutineLog(){
@@ -4275,6 +4276,7 @@ function lkPaint(){
 }
 
 function lockApp(){
+  localStorage.removeItem('fh_unlocked');
   sessionStorage.removeItem('fh_unlocked');
   setParentUnlocked(false);
   const lock=$('lock');
@@ -4309,26 +4311,21 @@ function resetAllData(){
     localStorage.removeItem(FAMILY_NAME_KEY);
     // Keep app password so they can still get in
     // Reload to fresh state
+    localStorage.removeItem('fh_unlocked');
     sessionStorage.removeItem('fh_unlocked');
     window.location.reload();
   });
 }
 function lkInit(){
-  // Set family name
   const fn=$('lk-family-name');
   if(fn)fn.textContent=getFamilyName();
-
-  // Set greeting
   const scene=lkGetScene();
   const greet=$('lk-greeting');
   if(greet)greet.textContent=(scene==='night')?'Good night':(scene==='sunset')?'Good evening':'Good morning';
-
-  // Paint scene
   lkPaint();
   window.addEventListener('resize',lkPaint);
-
-  // Check if already unlocked this session
-  if(sessionStorage.getItem('fh_unlocked')==='1'){
+  // Use localStorage so unlock survives app backgrounding on iPad
+  if(localStorage.getItem('fh_unlocked')==='1'){
     $('lock').classList.add('gone');
     checkAutoReset();
     renderHome();
@@ -4339,7 +4336,7 @@ function lkSubmit(){
   const pw=$('lk-pw').value;
   if(!pw){$('lk-err').textContent='Please enter the password.';return;}
   if(pw===getAppPw()){
-    sessionStorage.setItem('fh_unlocked','1');
+    localStorage.setItem('fh_unlocked','1');
     checkAutoReset();
     const lock=$('lock');
     lock.style.transition='opacity .4s ease, transform .4s ease';
