@@ -1807,10 +1807,9 @@ function renderCal(){
 }
 function buildLeg(){
   const l=$('cal-leg');l.innerHTML='';
-  members.forEach(m=>l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:${m.color};"></div>${m.icon} ${m.name}</div>`);
+  members.filter(function(m){return m.id!=='family';}).forEach(m=>l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:${m.color};"></div>${m.icon} ${m.name}</div>`);
   l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:#94A3B8;"></div>\uD83D\uDC6A Family</div>`;
   l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:#FCD34D;border:1px solid #ccc;"></div>\uD83D\uDFE1 General</div>`;
-  l.innerHTML+=`<div class="cal-leg-i"><div class="cal-leg-d" style="background:#94A3B8;"></div>\uD83D\uDC6A Family</div>`;
 }
 function switchCalV(v,e2){calView=v;['m','w','d'].forEach(x=>$('cvt-'+x).classList.remove('on'));e2.classList.add('on');renderCal();}
 function calNav(d){
@@ -4232,8 +4231,9 @@ function obFinish(){
   obMembers.forEach(function(m){members.push(m);});
   // Save data
   saveData();
-  // Mark onboarded
+  // Mark onboarded — write to both storages so Safari eviction doesn't wipe it
   localStorage.setItem('kinori_onboarded','1');
+  sessionStorage.setItem('kinori_onboarded_bk','1');
   // Hide onboarding
   cm('ob');
   // Navigate home
@@ -4277,7 +4277,9 @@ function lkPaint(){
 
 function lockApp(){
   localStorage.removeItem('fh_unlocked');
+  localStorage.removeItem('fh_unlocked_bk');
   sessionStorage.removeItem('fh_unlocked');
+  sessionStorage.removeItem('fh_unlocked_bk');
   setParentUnlocked(false);
   const lock=$('lock');
   lock.style.transition='';
@@ -4337,6 +4339,7 @@ function lkSubmit(){
   if(!pw){$('lk-err').textContent='Please enter the password.';return;}
   if(pw===getAppPw()){
     localStorage.setItem('fh_unlocked','1');
+    sessionStorage.setItem('fh_unlocked_bk','1');
     checkAutoReset();
     const lock=$('lock');
     lock.style.transition='opacity .4s ease, transform .4s ease';
@@ -4414,10 +4417,18 @@ function changeAppPassword(){
 //  INIT
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 // ── STARTUP ──
-// Never wipe existing data. Only show onboarding if no family data exists at all.
+// Safari on iPad can evict localStorage for websites. To defend against this,
+// we keep a sessionStorage backup of the critical "has been set up" flag.
+// If localStorage is missing the flag but sessionStorage has it, restore it.
+if(!localStorage.getItem('kinori_onboarded') && sessionStorage.getItem('kinori_onboarded_bk')==='1'){
+  localStorage.setItem('kinori_onboarded','1');
+}
+if(!localStorage.getItem('fh_unlocked') && sessionStorage.getItem('fh_unlocked_bk')==='1'){
+  localStorage.setItem('fh_unlocked','1');
+}
+
 var _hasExistingData = !!localStorage.getItem('familyhub_v5') || !!localStorage.getItem('kinori_onboarded');
 
-// Stamp schema version without clearing anything
 if(!localStorage.getItem('kinori_schema_version')){
   localStorage.setItem('kinori_schema_version', DATA_SCHEMA_VERSION);
 }
